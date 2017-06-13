@@ -1,3 +1,7 @@
+(require 'server)
+(unless (server-running-p)
+	  (server-start))
+
 ;; Make emacs look nice while loading
 (load-theme 'misterioso)
 (menu-bar-mode -1)

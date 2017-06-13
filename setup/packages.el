@@ -1,11 +1,13 @@
-(use-package auto-package-update
-  :config (auto-package-update-maybe))
-
-(use-package dash)
+(use-package spu
+  :init (defvar spu-log-path "/dev/null")
+  :config
+  (spu-package-upgrade-daily))
 
 (use-package rainbow-mode
   :diminish rainbow-mode
   :config (rainbow-mode 1))
+
+(use-package dash)
 
 (use-package all-the-icons)
 
@@ -37,7 +39,6 @@
   :config (moe-dark))
 
 (use-package smartparens
-  :defer t
   :init
   (add-hook 'prog-mode-hook 'smartparens-mode)
   :config (require 'smartparens-config))
