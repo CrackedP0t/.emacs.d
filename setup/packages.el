@@ -38,11 +38,6 @@
   :defer t
   :config (moe-dark))
 
-(use-package smartparens
-  :init
-  (add-hook 'prog-mode-hook 'smartparens-mode)
-  :config (require 'smartparens-config))
-
 (use-package browse-kill-ring
   :defer t)
 
@@ -87,14 +82,14 @@
   (setq ido-use-faces nil))
 
 (use-package switch-window
-  :bind (("C-x o" . switch-window)))
+  :bind ("C-x o" . switch-window))
 
 (use-package flycheck
   :init (global-flycheck-mode)
   :config (setq flycheck-completing-read-function (quote ido-completing-read)
-			 flycheck-display-errors-delay 0
-			 flycheck-idle-change-delay 0
-			 flycheck-display-errors-function nil))
+				flycheck-display-errors-delay 0
+				flycheck-idle-change-delay 0
+				flycheck-display-errors-function nil))
 
 (use-package magit
   :config (setq magit-completing-read-function 'magit-ido-completing-read))
@@ -105,6 +100,8 @@
 (use-package macrostep)
 
 (use-package projectile
+  :demand t
+  :bind ("C-c C-f" . projectile-find-file)
   :config (projectile-global-mode))
 
 (use-package lua-mode
@@ -144,22 +141,23 @@
   :defer t
   :init (add-hook 'prog-mode-hook 'company-mode)
   :config
-  (setq
-   company-frontends '(company-pseudo-tooltip-unless-just-one-frontend
-					   company-preview-common-frontend)
-   company-idle-delay 0.1
-   company-minimum-prefix-length 3
-   company-show-numbers t
-   company-tooltip-limit 10
-   company-backends '(company-capf
-					  ;; company-files
-					  company-keywords))
-  :bind
-  ("<tab>" . company-indent-or-complete-common))
+  (company-quickhelp-mode 1)
+  (company-statistics-mode 1)
+  (setq company-frontends '(company-pseudo-tooltip-unless-just-one-frontend
+							company-preview-common-frontend)
+		company-idle-delay 0.1
+		company-minimum-prefix-length 3
+		company-show-numbers t
+		company-tooltip-limit 10
+		company-backends '(company-capf
+						   company-keywords))
+  :bind ("<tab>" . company-indent-or-complete-common))
 
 (use-package company-quickhelp
-  :defer
-  :config (company-quickhelp-mode 1))
+  :defer t)
+
+(use-package company-statistics
+  :defer t)
 
 (defun add-backend (backend hook)
   "Add BACKEND to a local version of company-backends when HOOK is called."
@@ -244,16 +242,15 @@
 			:name "EMGmail"
 			:match-func (lambda (msg) (when msg
 										(string-prefix-p "/EMGmail" (mu4e-message-field msg :maildir))))
-			:vars '(
-					(mu4e-trash-folder . "/EMGmail/[Gmail].Trash")
+			:vars '((mu4e-trash-folder . "/EMGmail/[Gmail].Trash")
 					(mu4e-refile-folder . "/EMGmail/[Gmail].Archive")
 
-					(setq mu4e-drafts-folder "/[Gmail].Drafts")
-					(setq mu4e-sent-folder   "/[Gmail].Sent Mail")
-					(setq mu4e-trash-folder  "/[Gmail].Trash")
+					(mu4e-drafts-folder . "/[Gmail].Drafts")
+					(mu4e-sent-folder .  "/[Gmail].Sent Mail")
+					(mu4e-trash-folder . "/[Gmail].Trash")
 
 					;; don't save message to Sent Messages, Gmail/IMAP takes care of this
-					(setq mu4e-sent-messages-behavior 'delete)
+					(mu4e-sent-messages-behavior . 'delete)
 
 					;; (See the documentation for `mu4e-sent-messages-behavior' if you have
 					;; additional non-Gmail addresses and want assign them different
@@ -264,19 +261,17 @@
 					;; then, when you want archive some messages, move them to
 					;; the 'All Mail' folder by pressing ``ma''.
 
-					(setq mu4e-maildir-shortcuts
-						  '( ("/INBOX"               . ?i)
-							 ("/[Gmail].Sent Mail"   . ?s)
-							 ("/[Gmail].Trash"       . ?t)
-							 ("/[Gmail].All Mail"    . ?a)))
+					(mu4e-maildir-shortcuts . '( ("/INBOX"               . ?i)
+												 ("/[Gmail].Sent Mail"   . ?s)
+												 ("/[Gmail].Trash"       . ?t)
+												 ("/[Gmail].All Mail"    . ?a)))
 
 					;; allow for updating mail using 'U' in the main view:
-					(setq mu4e-get-mail-command "offlineimap")
+					(mu4e-get-mail-command . "offlineimap")
 
 					;; something about ourselves
-					(setq
-					 user-mail-address "elainamartineau@gmail.com"
-					 user-full-name  "Elaina Martineau")))))
+					(user-mail-address . "elainamartineau@gmail.com")
+					(user-full-name . "Elaina Martineau"))))))
 
 (use-package visual-regexp
   :defer t)
@@ -291,14 +286,23 @@
   ;; alternatively, for emacs-24 you can use:
   :config
   (setq message-send-mail-function 'smtpmail-send-it
-	   smtpmail-stream-type 'starttls
-	   smtpmail-default-smtp-server "smtp.gmail.com"
-	   smtpmail-smtp-server "smtp.gmail.com"
-	   smtpmail-smtp-service 587))
+		smtpmail-stream-type 'starttls
+		smtpmail-default-smtp-server "smtp.gmail.com"
+		smtpmail-smtp-server "smtp.gmail.com"
+		smtpmail-smtp-service 587)
 
-;; don't keep message buffers around
+  ;; don't keep message buffers around
   (setq message-kill-buffer-on-exit t))
 
+(defun draw-mc-vertical (event-type pos-1 pos-2)
+  "Depending on EVENT-TYPE, draws a vertical line of cursors starting at POS-1 and ending at POS-1's column but POS-2's row."
+
+
+  )
+
+(use-package multiple-cursors
+  :bind (("<mouse-2>" . mc/add-cursor-on-click)
+		 ("<drag-mouse-2>" . draw-mc-vertical)))
 
 
 (use-package virtualenvwrapper)

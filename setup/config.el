@@ -27,6 +27,4 @@
 (bind-key "<mouse-3>" 'mouse-major-mode-menu)
 (unbind-key "<C-down-mouse-1>")
 
-;;(bind-key* "<delete-frame>" 'kill-emacs)
-
 (disable-theme 'misterioso)
