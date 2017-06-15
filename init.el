@@ -1,11 +1,14 @@
 (require 'server)
-(unless (server-running-p)
-	  (server-start))
+(if (server-running-p)
+	(kill-emacs)
+  (server-start))
 
 ;; Make emacs look nice while loading
 (load-theme 'misterioso)
-(menu-bar-mode -1)
-(tool-bar-mode -1)
+(menu-bar-mode 0)
+(tool-bar-mode 0)
+(scroll-bar-mode 0)
+
 (set-frame-parameter nil 'fullscreen 'maximized)
 
 ;; Starting Up
@@ -35,14 +38,14 @@
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
-  (package-install 'use-package)
-  (require 'use-package)
-  (setq use-package-always-ensure t))
+  (package-install 'use-package))
 
 (use-package auto-compile
-  :config
-  (setq auto-compile-display-buffer nil)
-  (auto-compile-on-load-mode))
+  :ensure t
+  :config (setq auto-compile-display-buffer nil)
+  :config (progn (auto-compile-on-load-mode)))
+
+(setq use-package-always-ensure t)
 
 ;; Load relevant .el files
 (let ((elfiles '("packages" "config")))
