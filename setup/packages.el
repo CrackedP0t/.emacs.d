@@ -154,6 +154,11 @@
 (use-package company
   :diminish company-mode
   :defer t
+  :bind (:map company-active-map
+			   ("C-n" . company-select-next)
+			   ("C-p" . company-select-previous)
+			   ("M-n" . nil)
+			   ("M-p" . nil))
   :init (add-hook 'prog-mode-hook 'company-mode)
   :config (setq company-frontends '(company-pseudo-tooltip-unless-just-one-frontend
 									company-preview-common-frontend)
@@ -190,7 +195,7 @@
   "Pass BACKEND and HOOK to add-backend on use-package's :config."
   `(use-package ,backend
 	 :defer t
-	 :config
+	 :init
 	 (add-backend ',backend ,hook)))
 
 (use-backend company-anaconda 'anaconda-mode-hook)
@@ -236,6 +241,7 @@
 
 (use-package which-key
   :diminish which-key-mode
+  :config (setq which-key-idle-delay 0)
   :config (progn (which-key-mode 1)))
 
 (use-package autorevert
@@ -251,46 +257,6 @@
 
 (use-package try
   :defer t)
-
-(use-package mu4e
-  :defer t
-  :ensure nil
-  :load-path "/usr/share/emacs/site-lisp/mu4e"
-  :config (setq mu4e-contexts
-				`(,(make-mu4e-context
-					:name "EMGmail"
-					:match-func (lambda (msg) (when msg
-												(string-prefix-p "/EMGmail" (mu4e-message-field msg :maildir))))
-					:vars '((mu4e-trash-folder . "/EMGmail/[Gmail].Trash")
-							(mu4e-refile-folder . "/EMGmail/[Gmail].Archive")
-
-							(mu4e-drafts-folder . "/[Gmail].Drafts")
-							(mu4e-sent-folder .  "/[Gmail].Sent Mail")
-							(mu4e-trash-folder . "/[Gmail].Trash")
-
-							;; don't save message to Sent Messages, Gmail/IMAP takes care of this
-							(mu4e-sent-messages-behavior . 'delete)
-
-							;; (See the documentation for `mu4e-sent-messages-behavior' if you have
-							;; additional non-Gmail addresses and want assign them different
-							;; behavior.)
-
-							;; setup some handy shortcuts
-							;; you can quickly switch to your Inbox -- press ``ji''
-							;; then, when you want archive some messages, move them to
-							;; the 'All Mail' folder by pressing ``ma''.
-
-							(mu4e-maildir-shortcuts . '( ("/INBOX"               . ?i)
-														 ("/[Gmail].Sent Mail"   . ?s)
-														 ("/[Gmail].Trash"       . ?t)
-														 ("/[Gmail].All Mail"    . ?a)))
-
-							;; allow for updating mail using 'U' in the main view:
-							(mu4e-get-mail-command . "offlineimap")
-
-							;; something about ourselves
-							(user-mail-address . "elainamartineau@gmail.com")
-							(user-full-name . "Elaina Martineau"))))))
 
 (use-package visual-regexp
   :defer t)
@@ -316,14 +282,15 @@
 
 (use-package counsel
   :demand t
+  :bind (:map ivy-minibuffer-map ("<tab>" . ivy-partial)
+			  ("<return>" . ivy-alt-done)
+			  ("C-j" . ivy-immediate-done))
   :bind (("C-s" . swiper)
 		 ("M-x" . counsel-M-x)
 		 ("<menu>" . counsel-M-x)
 		 ("C-x C-f" . counsel-find-file)
 		 ("C-h f" . counsel-describe-function)
-		 ("C-h v" . counsel-describe-variable)
-		 ("<f2> i" . counsel-info-lookup-symbol)
-		 ("<f2> u" . counsel-unicode-char))
+		 ("C-h v" . counsel-describe-variable))
   :config (setq ivy-use-virtual-buffers t
 				ivy-count-format "(%d/%d) "
 				ivy-re-builders-alist '((t . ivy--regex-fuzzy))
@@ -331,9 +298,9 @@
   :config (progn (ivy-mode 1)))
 
 (use-package avy
+  :bind ("C-c a" . avy-goto-char)
   :config (setq avy-all-windows nil
-				avy-all-windows-alt t)
-  :config (progn (avy-setup-default)))
+				avy-all-windows-alt t))
 
 (use-package ace-link
   :config (progn (ace-link-setup-default)))
