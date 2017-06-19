@@ -39,11 +39,17 @@
  '(jdee-db-spec-breakpoint-face-colors ("#1B2229" . "#3B3F46"))
  '(package-selected-packages
    (quote
-	(flx lispy ace-window ace-link counsel ivy flycheck-irony ripgrep company bm anaconda-mode lua-mode projectile all-the-icons company-irony irony avy persp-mode-projectile-bridge persp-mode which-key web-mode visual-regexp virtualenvwrapper use-package undo-tree try system-packages switch-window spu smex restart-emacs rainbow-mode rainbow-delimiters projectile-ripgrep powerline paradox nlinum multiple-cursors moe-theme markdown-mode magit macrostep ido-ubiquitous grandshell-theme gotham-theme golden-ratio gitignore-mode flycheck flx-ido dracula-theme distinguished-theme company-web company-statistics company-quickhelp company-lua company-anaconda color-theme-sanityinc-tomorrow clues-theme browse-kill-ring auto-compile all-the-icons-dired)))
+	(smart-tabs-mode smarttabs smart-tabs flx lispy ace-window ace-link counsel ivy flycheck-irony ripgrep company bm anaconda-mode lua-mode projectile all-the-icons company-irony irony avy persp-mode-projectile-bridge persp-mode which-key web-mode visual-regexp virtualenvwrapper use-package undo-tree try system-packages switch-window spu smex restart-emacs rainbow-mode rainbow-delimiters projectile-ripgrep powerline paradox nlinum multiple-cursors moe-theme markdown-mode magit macrostep ido-ubiquitous grandshell-theme gotham-theme golden-ratio gitignore-mode flycheck flx-ido dracula-theme distinguished-theme company-web company-statistics company-quickhelp company-lua company-anaconda color-theme-sanityinc-tomorrow clues-theme browse-kill-ring auto-compile all-the-icons-dired)))
  '(persp-keymap-prefix "x")
  '(powerline-gui-use-vcs-glyph t)
  '(ring-bell-function (quote ignore))
- '(safe-local-variable-values (quote ((eval progn (pp-buffer) (indent-buffer)))))
+ '(safe-local-variable-values
+   (quote
+	((company-clang-arguments "-Iinclude/" "-I/opt/devkitpro/devkitARM/include/" "-I/opt/devkitpro/libctru/include/")
+	 (flycheck-gcc-include-path
+	  ("/opt/devkitpro/devkitARM/include/" "/opt/devkitpro/libctru/include/" "../include/"))
+	 (flycheck-gcc-warnings . "all")
+	 (flycheck-c/c++-gcc-executable . "/opt/devkitpro/devkitARM/bin/arm-none-eabi-gcc"))))
  '(savehist-file "~/.emacs.d/savehist")
  '(savehist-mode t)
  '(sentence-end-double-space nil)

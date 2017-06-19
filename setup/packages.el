@@ -86,8 +86,14 @@
 ;; (use-package switch-window
 ;;   :bind ("C-x o" . switch-window))
 
+
+(use-package irony
+  :init (progn (add-hook 'c++-mode-hook 'irony-mode)
+			   (add-hook 'c-mode-hook 'irony-mode)
+			   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)))
+
 (use-package flycheck
-  :config (setq ;; flycheck-completing-read-function (quote ido-completing-read)
+  :config (setq flycheck-completing-read-function 'ivy-completing-read
 				flycheck-display-errors-delay 0
 				flycheck-idle-change-delay 0
 				flycheck-display-errors-function nil
@@ -96,13 +102,7 @@
   :config (progn (global-flycheck-mode 1)))
 
 (use-package flycheck-irony
-  :defer t
   :init (add-hook 'flycheck-mode-hook 'flycheck-irony-setup))
-
-(use-package magit
-  :defer t
-  :config (setq ;;magit-completing-read-function 'magit-ido-completing-read
-		   ))
 
 (use-package powerline
   :config (progn (powerline-default-theme)))
@@ -116,7 +116,8 @@
   :config (setq projectile-mode-line
 				'(:eval
 				  (format " %s "
-						  (projectile-project-name))))
+						  (projectile-project-name)))
+				projectile-completion-system 'ivy)
   :config (progn (projectile-global-mode)))
 
 (use-package lua-mode
@@ -139,26 +140,13 @@
   :bind (("M-n" . bm-next)
 		 ("M-p" . bm-prev)))
 
-(use-package irony
-  :defer t
-  :init (progn (add-hook 'c++-mode-hook 'irony-mode)
-			   (add-hook 'c-mode-hook 'irony-mode)
-			   (add-hook 'objc-mode-hook 'irony-mode)
-			   (add-hook 'irony-mode-hook (lambda ()
-											(define-key irony-mode-map [remap completion-at-point]
-											  'irony-completion-at-point-async)
-											(define-key irony-mode-map [remap complete-symbol]
-											  'irony-completion-at-point-async)))
-			   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)))
-
 (use-package company
-  :diminish company-mode
-  :defer t
   :bind (:map company-active-map
 			   ("C-n" . company-select-next)
 			   ("C-p" . company-select-previous)
 			   ("M-n" . nil)
 			   ("M-p" . nil))
+  :bind (("<tab>" . company-indent-or-complete-common))
   :init (add-hook 'prog-mode-hook 'company-mode)
   :config (setq company-frontends '(company-pseudo-tooltip-unless-just-one-frontend
 									company-preview-common-frontend)
@@ -241,7 +229,7 @@
 
 (use-package which-key
   :diminish which-key-mode
-  :config (setq which-key-idle-delay 0)
+  :config (setq which-key-idle-delay 0.5)
   :config (progn (which-key-mode 1)))
 
 (use-package autorevert
@@ -266,6 +254,8 @@
   :bind (("<mouse-2>" . mc/add-cursor-on-click)))
 
 (use-package persp-mode
+  :disabled t
+  :config (setq persp-interactive-completion-system 'ivy-completing-read)
   :config (progn (persp-mode 1)))
 
 (use-package persp-mode-projectile-bridge
@@ -312,9 +302,18 @@
   :defer t)
 
 (use-package lispy
+  :disabled t
   :defer t
   :config (progn (add-hook 'emacs-lisp-mode-hook 'lispy-mode)))
 
 (use-package smex
   :defer t
   :config (progn (smex-initialize)))
+
+
+(use-package magit
+  :defer t
+  :config (setq magit-completing-read-function 'ivy-completing-read))
+
+(use-package smart-tabs-mode
+  :config (progn (smart-tabs-insinuate 'c)))
