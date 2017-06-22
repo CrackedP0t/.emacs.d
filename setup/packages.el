@@ -118,7 +118,9 @@
 				  (format " %s "
 						  (projectile-project-name)))
 				projectile-completion-system 'ivy)
-  :config (progn (projectile-global-mode)))
+  :config (progn (add-hook 'prog-mode-hook (lambda ()
+											 (when (projectile-project-p)
+											   (projectile-mode))))))
 
 (use-package lua-mode
   :mode ("\\.lua$" . lua-mode)
@@ -194,9 +196,7 @@
 (use-backend company-irony 'irony-mode-hook)
 
 (setq conf/golden-ratio-main (current-buffer))
-(defun conf/golden-ratio-main-inhibit ()
-
-  )
+(defun conf/golden-ratio-main-inhibit ())
 
 (use-package golden-ratio
   :diminish golden-ratio-mode
@@ -207,9 +207,7 @@
 				(quote
 				 ("message-buffer-mode" "debugger-mode" "help-mode" "custom-mode")))
 
-  :config (progn (add-hook 'prog-mode-hook (lambda ()
-											 (when (projectile-project-p)
-											   (projectile-mode))))
+  :config (golden-ratio-mode))
 
 (use-package web-mode
   :defer t)
