@@ -39,13 +39,22 @@
  '(jdee-db-spec-breakpoint-face-colors ("#1B2229" . "#3B3F46"))
  '(package-selected-packages
    (quote
-	(smart-tabs-mode smarttabs smart-tabs flx lispy ace-window ace-link counsel ivy flycheck-irony ripgrep company bm anaconda-mode lua-mode projectile all-the-icons company-irony irony avy persp-mode-projectile-bridge persp-mode which-key web-mode visual-regexp virtualenvwrapper use-package undo-tree try system-packages switch-window spu smex restart-emacs rainbow-mode rainbow-delimiters projectile-ripgrep powerline paradox nlinum multiple-cursors moe-theme markdown-mode magit macrostep ido-ubiquitous grandshell-theme gotham-theme golden-ratio gitignore-mode flycheck flx-ido dracula-theme distinguished-theme company-web company-statistics company-quickhelp company-lua company-anaconda color-theme-sanityinc-tomorrow clues-theme browse-kill-ring auto-compile all-the-icons-dired)))
+	(dumb-jump smart-tabs-mode smarttabs smart-tabs flx lispy ace-window ace-link counsel ivy flycheck-irony ripgrep company bm anaconda-mode lua-mode projectile all-the-icons company-irony irony avy persp-mode-projectile-bridge persp-mode which-key web-mode visual-regexp virtualenvwrapper use-package undo-tree try system-packages switch-window spu smex restart-emacs rainbow-mode rainbow-delimiters projectile-ripgrep powerline paradox nlinum multiple-cursors moe-theme markdown-mode magit macrostep ido-ubiquitous grandshell-theme gotham-theme golden-ratio gitignore-mode flycheck flx-ido dracula-theme distinguished-theme company-web company-statistics company-quickhelp company-lua company-anaconda color-theme-sanityinc-tomorrow clues-theme browse-kill-ring auto-compile all-the-icons-dired)))
  '(persp-keymap-prefix "x")
  '(powerline-gui-use-vcs-glyph t)
  '(ring-bell-function (quote ignore))
  '(safe-local-variable-values
    (quote
-	((company-clang-arguments "-Iinclude/" "-I/opt/devkitpro/devkitARM/include/" "-I/opt/devkitpro/libctru/include/")
+	((company-clang-arguments "-I/home/elaina/Development/Projects/Browse3DS/include/" "-I/opt/devkitpro/devkitARM/include/" "-I/opt/devkitpro/libctru/include/")
+	 (eval progn
+		   (irony-mode 0)
+		   (abbrev-mode 0))
+	 (eval
+	  (quote
+	   (irony-mode 0)))
+	 (eval
+	  (irony-mode 0))
+	 (company-clang-arguments "-Iinclude/" "-I/opt/devkitpro/devkitARM/include/" "-I/opt/devkitpro/libctru/include/")
 	 (flycheck-gcc-include-path
 	  ("/opt/devkitpro/devkitARM/include/" "/opt/devkitpro/libctru/include/" "../include/"))
 	 (flycheck-gcc-warnings . "all")
@@ -67,4 +76,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:inherit nil :stipple nil :background "#2d2d2d" :foreground "#cccccc" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 113 :width normal :foundry "PfEd" :family "AnonymousasdikjsagdasgdsgdaigsadiPro")))))

@@ -142,11 +142,12 @@
 
 (use-package company
   :bind (:map company-active-map
-			   ("C-n" . company-select-next)
-			   ("C-p" . company-select-previous)
-			   ("M-n" . nil)
-			   ("M-p" . nil))
-  :bind (("<tab>" . company-indent-or-complete-common))
+			  ("C-n" . company-select-next)
+			  ("C-p" . company-select-previous)
+			  ("M-n" . nil)
+			  ("M-p" . nil))
+  :bind (:map company-mode-map
+			  ("<tab>" . company-indent-or-complete-common))
   :init (add-hook 'prog-mode-hook 'company-mode)
   :config (setq company-frontends '(company-pseudo-tooltip-unless-just-one-frontend
 									company-preview-common-frontend)
@@ -192,15 +193,23 @@
 (use-backend company-web 'web-mode-hook)
 (use-backend company-irony 'irony-mode-hook)
 
+(setq conf/golden-ratio-main (current-buffer))
+(defun conf/golden-ratio-main-inhibit ()
+
+  )
+
 (use-package golden-ratio
   :diminish golden-ratio-mode
   :config (setq frame-resize-pixelwise t
 				golden-ratio-auto-scale t
 				golden-ratio-exclude-buffer-names nil
 				golden-ratio-exclude-modes
-				  (quote
-				   ("message-buffer-mode" "debugger-mode" "help-mode" "custom-mode")))
-  :config (progn (golden-ratio-mode 1)))
+				(quote
+				 ("message-buffer-mode" "debugger-mode" "help-mode" "custom-mode")))
+
+  :config (progn (add-hook 'prog-mode-hook (lambda ()
+											 (when (projectile-project-p)
+											   (projectile-mode))))
 
 (use-package web-mode
   :defer t)
@@ -247,7 +256,9 @@
   :defer t)
 
 (use-package visual-regexp
-  :defer t)
+  :defer t
+  :bind (("C-c r" . vr/replace)
+		 ("C-c R" . vr/query-replace)))
 
 (use-package multiple-cursors
   :defer t
@@ -283,7 +294,7 @@
 		 ("C-h v" . counsel-describe-variable))
   :config (setq ivy-use-virtual-buffers t
 				ivy-count-format "(%d/%d) "
-				ivy-re-builders-alist '((t . ivy--regex-fuzzy))
+				ivy-re-builders-alist '((t . ivy--regex))
 				ivy-sort-functions-alist '((t . string-lessp)))
   :config (progn (ivy-mode 1)))
 
@@ -317,3 +328,6 @@
 
 (use-package smart-tabs-mode
   :config (progn (smart-tabs-insinuate 'c)))
+
+(use-package dumb-jump
+  :defer t)
