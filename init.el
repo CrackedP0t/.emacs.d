@@ -4,10 +4,11 @@
   (server-start))
 
 ;; Make emacs look nice while loading
-(load-theme 'misterioso)
+(set-frame-font "Hack 12" nil t)
 (menu-bar-mode 0)
 (tool-bar-mode 0)
 (scroll-bar-mode 0)
+(load-theme 'misterioso)
 
 (set-frame-parameter nil 'fullscreen 'maximized)
 
