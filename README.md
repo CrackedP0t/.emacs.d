@@ -1,2 +1,2 @@
-Trebuchette's .emacs.d
+Trebuchette's dotfiles
 =
