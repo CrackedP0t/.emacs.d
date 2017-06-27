@@ -27,8 +27,18 @@
 (bind-key "<mouse-3>" 'mouse-major-mode-menu)
 (unbind-key "<C-down-mouse-1>")
 
+(bind-key "<down-mouse-2>" 'mouse-yank-at-click)
+(unbind-key "<mouse-2>")
+
+(bind-key "C-c f f" 'find-function)
+(bind-key "C-c f v" 'find-variable)
+
+(bind-key* "C-c C-b" 'recompile)
+
 (setq-default indent-tabs-mode t)
 (setq-default tab-width 4)
+
+(setq-default debugger-bury-or-kill 'kill)
 
 (when (member "DejaVu Sans Mono" (font-family-list))
   (set-face-attribute 'default nil :font "DejaVu Sans Mono"))
@@ -37,6 +47,9 @@
   "Kills emacs, then clears out ~/.emacs.d"
   (interactive)
   (add-to-list 'kill-emacs-hook (lambda ()
-								  (call-process-shell-command "cd ~/.emacs.d/ && git status --ignored --porcelain | sed -nE \"s/\!! (.+)$/\1/p\" | xargs rm -r"))
+						  (call-process-shell-command "cd ~/.emacs.d/ && git status --ignored --porcelain | sed -nE \"s/\!! (.+)$/\\1/p\" | xargs rm -r &"))
 			   t)
   (save-buffers-kill-emacs))
+
+(add-to-list 'process-environment "DEVKITPRO=/opt/devkitpro/")
+(add-to-list 'process-environment "DEVKITARM=/opt/devkitpro/devkitARM")

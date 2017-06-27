@@ -13,7 +13,9 @@
 
 (use-package all-the-icons-dired
   :defer t
-  :init (add-hook 'dired-mode-hook 'all-the-icons-dired-mode))
+  :init (add-hook
+		 'dired-mode-hook
+		 'all-the-icons-dired-mode))
 
 (use-package clues-theme
   :defer t)
@@ -34,9 +36,7 @@
   :defer t)
 
 (use-package moe-theme
-  :no-require t
-  :defer t
-  :config (progn (moe-dark)))
+  :config (moe-dark))
 
 (use-package browse-kill-ring
   :defer t)
@@ -86,12 +86,6 @@
 ;; (use-package switch-window
 ;;   :bind ("C-x o" . switch-window))
 
-
-(use-package irony
-  :init (progn (add-hook 'c++-mode-hook 'irony-mode)
-			   (add-hook 'c-mode-hook 'irony-mode)
-			   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)))
-
 (use-package flycheck
   :config (setq flycheck-completing-read-function 'ivy-completing-read
 				flycheck-display-errors-delay 0
@@ -100,9 +94,6 @@
 				flycheck-display-errors-delay 0
 				flycheck-idle-change-delay 0)
   :config (progn (global-flycheck-mode 1)))
-
-(use-package flycheck-irony
-  :init (add-hook 'flycheck-mode-hook 'flycheck-irony-setup))
 
 (use-package powerline
   :config (progn (powerline-default-theme)))
@@ -118,9 +109,9 @@
 				  (format " %s "
 						  (projectile-project-name)))
 				projectile-completion-system 'ivy)
-  :config (progn (add-hook 'prog-mode-hook (lambda ()
-											 (when (projectile-project-p)
-											   (projectile-mode))))))
+  :config (progn (add-hook 'prog-mode-hook #'(lambda ()
+											   (when (projectile-project-p)
+												 (projectile-mode))))))
 
 (use-package lua-mode
   :mode ("\\.lua$" . lua-mode)
@@ -143,25 +134,34 @@
 		 ("M-p" . bm-prev)))
 
 (use-package company
+  :diminish company-mode
   :bind (:map company-active-map
-			  ("C-n" . company-select-next)
-			  ("C-p" . company-select-previous)
-			  ("M-n" . nil)
-			  ("M-p" . nil))
+			  ("C-n" . nil)
+			  ("C-p" . nil)
+			  ("M-n" . company-select-next)
+			  ("M-p" . company-select-previous)
+			  ("<up>" .  nil)
+			  ("<down>" . nil)
+			  ("RET" . nil))
   :bind (:map company-mode-map
 			  ("<tab>" . company-indent-or-complete-common))
   :init (add-hook 'prog-mode-hook 'company-mode)
-  :config (setq company-frontends '(company-pseudo-tooltip-unless-just-one-frontend
-									company-preview-common-frontend)
-				company-idle-delay 0.1
-				company-minimum-prefix-length 3
-				company-show-numbers t
-				company-tooltip-limit 10
-				company-backends '(company-capf
-								   company-keywords)
-				company-require-match nil))
+  :config (setq
+		   company-frontends '(company-pseudo-tooltip-unless-just-one-frontend
+							   company-preview-common-frontend)
+		   company-idle-delay 0.1
+		   company-minimum-prefix-length 3
+		   company-show-numbers t
+		   company-tooltip-limit 10
+		   company-backends '(company-capf
+							  company-keywords
+							  company-files)
+		   company-require-match nil
+		   company-continue-commands t
+		   company-begin-commands '(self-insert-command)))
 
 (use-package company-quickhelp
+  :disabled t
   :defer t
   :init (add-hook 'company-mode-hook 'company-quickhelp-mode)
   :config (setq
@@ -174,13 +174,13 @@
   :defer t
   :init (add-hook 'company-mode-hook 'company-statistics-mode))
 
-(defun add-backend (backend hook)
+(defmacro add-backend (backend hook)
   "Add BACKEND to a local version of company-backends when HOOK is called."
-  (add-hook
-   hook
-   `(lambda ()
-	  (add-to-list (make-local-variable 'company-backends)
-				   ',backend))))
+  `(add-hook
+	,hook
+   (lambda ()
+	 (add-to-list (make-local-variable 'company-backends)
+				  ',backend))))
 
 (defmacro use-backend (backend hook)
   "Pass BACKEND and HOOK to add-backend on use-package's :config."
@@ -193,19 +193,28 @@
 (add-backend 'company-elisp 'emacs-lisp-mode-hook)
 (use-backend company-lua 'lua-mode-hook)
 (use-backend company-web 'web-mode-hook)
-(use-backend company-irony 'irony-mode-hook)
+(use-backend company-shell 'sh-mode-hook)
 
-(setq conf/golden-ratio-main (current-buffer))
-(defun conf/golden-ratio-main-inhibit ())
+(use-package irony
+  :disabled t
+  :init (progn
+		  (add-hook 'c++-mode-hook 'irony-mode)
+		  (add-hook 'c-mode-hook 'irony-mode)
+		  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+  :config (progn
+			(use-backend company-irony 'irony-mode-hook)
+			(use-package flycheck-irony
+			  :init (add-hook 'flycheck-mode-hook 'flycheck-irony-setup))))
 
 (use-package golden-ratio
   :diminish golden-ratio-mode
-  :config (setq frame-resize-pixelwise t
-				golden-ratio-auto-scale t
-				golden-ratio-exclude-buffer-names nil
-				golden-ratio-exclude-modes
-				(quote
-				 ("message-buffer-mode" "debugger-mode" "help-mode" "custom-mode")))
+  :config (setq
+		   frame-resize-pixelwise t
+		   golden-ratio-auto-scale t
+		   golden-ratio-exclude-buffer-names nil
+		   golden-ratio-exclude-modes
+		   (quote
+			("message-buffer-mode" "debugger-mode" "help-mode" "custom-mode")))
 
   :config (golden-ratio-mode))
 
@@ -214,19 +223,22 @@
 
 (use-package eldoc
   :diminish eldoc-mode
-  :init (progn (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-			   (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
-			   (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)))
+  :init (progn
+		  (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+		  (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+		  (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)))
 
 (use-package undo-tree
   :diminish undo-tree-mode
-  :config (progn (global-undo-tree-mode 1))
-  :config (setq undo-tree-visualizer-timestamps t
-				undo-tree-visualizer-diff t))
+  :config (progn
+			(global-undo-tree-mode 1))
+  :config (setq
+		   undo-tree-visualizer-timestamps t
+		   undo-tree-visualizer-diff t))
 
 (use-package ibuffer
   :defer t
-  :bind ("C-x C-b" . ibuffer))
+  :bind (("C-x C-b" . ibuffer)))
 
 (use-package gitignore-mode
   :defer t)
@@ -236,8 +248,10 @@
 
 (use-package which-key
   :diminish which-key-mode
-  :config (setq which-key-idle-delay 0.5)
-  :config (progn (which-key-mode 1)))
+  :config (setq
+		   which-key-idle-delay 0.5)
+  :config (progn
+			(which-key-mode 1)))
 
 (use-package autorevert
   :disabled
@@ -254,34 +268,49 @@
   :defer t)
 
 (use-package visual-regexp
-  :defer t
   :bind (("C-c r" . vr/replace)
-		 ("C-c R" . vr/query-replace)))
+		 ("C-c R" . vr/query-replace))
+  :config (progn
+			(defun vr/replace-buffer-adv (&rest arguments)
+			  (save-excursion
+				(point (point-min))
+				(apply #'vr/replace arguments)))
+
+			(advice-add #'vr/replace :around #'vr/replace-buffer-adv)))
 
 (use-package multiple-cursors
   :defer t
-  :bind (("<mouse-2>" . mc/add-cursor-on-click)))
+  :bind (("<C-down-mouse-2>" . mc/add-cursor-on-click)
+		 ("<C-mouse-2>" . nil)))
 
 (use-package persp-mode
   :disabled t
-  :config (setq persp-interactive-completion-system 'ivy-completing-read)
-  :config (progn (persp-mode 1)))
+  :config (setq
+		   persp-interactive-completion-system 'ivy-completing-read)
+  :config (progn
+			(persp-mode 1)))
 
 (use-package persp-mode-projectile-bridge
   :disabled t
-  :config (progn (add-hook 'after-init-hook 'persp-mode-projectile-bridge-mode)
-				 (add-hook 'persp-mode-projectile-bridge-mode-hook
-						   (lambda ()
-							 (if persp-mode-projectile-bridge-mode
-								 (persp-mode-projectile-bridge-find-perspectives-for-all-buffers)
-							   (persp-mode-projectile-bridge-kill-perspectives))))))
+  :config (progn
+			(add-hook
+			 'after-init-hook
+			 'persp-mode-projectile-bridge-mode)
+			(add-hook
+			 'persp-mode-projectile-bridge-mode-hook
+			 (lambda ()
+			   (if persp-mode-projectile-bridge-mode
+				   (persp-mode-projectile-bridge-find-perspectives-for-all-buffers)
+				 (persp-mode-projectile-bridge-kill-perspectives))))))
 
 (use-package hydra
-  :config (setq hydra-verbose t))
+  :config (setq
+		   hydra-verbose t))
 
 (use-package counsel
   :demand t
-  :bind (:map ivy-minibuffer-map ("<tab>" . ivy-partial)
+  :bind (:map ivy-minibuffer-map
+			  ("<tab>" . ivy-partial)
 			  ("<return>" . ivy-alt-done)
 			  ("C-j" . ivy-immediate-done))
   :bind (("C-s" . swiper)
@@ -290,22 +319,26 @@
 		 ("C-x C-f" . counsel-find-file)
 		 ("C-h f" . counsel-describe-function)
 		 ("C-h v" . counsel-describe-variable))
-  :config (setq ivy-use-virtual-buffers t
-				ivy-count-format "(%d/%d) "
-				ivy-re-builders-alist '((t . ivy--regex))
-				ivy-sort-functions-alist '((t . string-lessp)))
-  :config (progn (ivy-mode 1)))
+  :config (setq
+		   ivy-use-virtual-buffers t
+		   ivy-count-format "(%d/%d) "
+		   ivy-re-builders-alist '((t . ivy--regex))
+		   ivy-sort-functions-alist '((t . string-lessp)))
+  :config (progn
+			(ivy-mode 1)))
 
 (use-package avy
-  :bind ("C-c a" . avy-goto-char)
-  :config (setq avy-all-windows nil
-				avy-all-windows-alt t))
+  :bind ("C-c g" . avy-goto-char)
+  :config (setq
+		   avy-all-windows nil
+		   avy-all-windows-alt t))
 
 (use-package ace-link
-  :config (progn (ace-link-setup-default)))
+  :config (progn
+			(ace-link-setup-default)))
 
 (use-package ace-window
-  :bind ("C-x o" . ace-window))
+  :bind (("C-x o" . ace-window)))
 
 (use-package flx
   :defer t)
@@ -313,19 +346,34 @@
 (use-package lispy
   :disabled t
   :defer t
-  :config (progn (add-hook 'emacs-lisp-mode-hook 'lispy-mode)))
+  :config (progn
+			(add-hook 'emacs-lisp-mode-hook 'lispy-mode)))
 
 (use-package smex
   :defer t
-  :config (progn (smex-initialize)))
+  :config (progn
+			(smex-initialize)))
 
 
 (use-package magit
   :defer t
-  :config (setq magit-completing-read-function 'ivy-completing-read))
+  :config (setq
+		   magit-completing-read-function 'ivy-completing-read))
 
 (use-package smart-tabs-mode
-  :config (progn (smart-tabs-insinuate 'c)))
+  :config (progn
+			(smart-tabs-insinuate 'c)))
 
 (use-package dumb-jump
   :defer t)
+
+(use-package dired-single
+  :defer t
+  :bind (:map dired-mode-map
+			  ("<return>" . dired-single-buffer)
+			  ("<mouse-1>" . dired-single-buffer-mouse))
+  (bind-key "^"
+			#'(lambda nil
+				(interactive)
+				(dired-single-buffer ".."))
+			dired-mode-map))
