@@ -12,16 +12,18 @@
 
 (set-frame-parameter nil 'fullscreen 'maximized)
 
-;; Starting Up
-
-;; This sets up the load path so that we can override it
 (package-initialize)
 (setq package-enable-at-startup nil)
 
-(add-to-list 'load-path "~/.emacs.d/setup/")
+(defvar setup-path "~/.emacsconf"
+	"The path to the setup files")
+	
+(defvar custom-file (concat setup-path "/custom.el")
+	"The custom file")
 
-;; Custom load paths
-(setq custom-file "~/.emacs.d/setup/custom.el")
+(add-to-list 'load-path setup-path)
+
+(setq custom-file "~/.emacsconf/custom.el")
 (load custom-file t)
 
 (setq user-full-name "Elaina Martineau"
@@ -49,5 +51,5 @@
 (setq use-package-always-ensure t)
 
 ;; Load relevant .el files
-(let ((elfiles '("packages" "config")))
+(let ((elfiles '("packages" "setup")))
   (mapc 'load elfiles))

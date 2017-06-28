@@ -103,7 +103,7 @@
 
 (use-package projectile
   :demand t
-  :bind ("C-c C-f" . projectile-find-file)
+  :bind (("C-c C-f" . projectile-find-file))
   :config (setq projectile-mode-line
 				'(:eval
 				  (format " %s "
@@ -273,7 +273,7 @@
   :config (progn
 			(defun vr/replace-buffer-adv (&rest arguments)
 			  (save-excursion
-				(point (point-min))
+				(goto-char (point-min))
 				(apply #'vr/replace arguments)))
 
 			(advice-add #'vr/replace :around #'vr/replace-buffer-adv)))
