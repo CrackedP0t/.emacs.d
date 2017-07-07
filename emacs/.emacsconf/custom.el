@@ -49,7 +49,7 @@
  '(jdee-db-spec-breakpoint-face-colors ("#1B2229" . "#3B3F46"))
  '(package-selected-packages
    (quote
-    (fill-column-indicator company-shell dired-single company-clang dumb-jump smart-tabs-mode smarttabs smart-tabs flx lispy ace-window ace-link counsel ivy flycheck-irony ripgrep company bm anaconda-mode lua-mode projectile all-the-icons company-irony irony avy persp-mode-projectile-bridge persp-mode which-key web-mode visual-regexp virtualenvwrapper use-package undo-tree try system-packages switch-window spu smex restart-emacs rainbow-mode rainbow-delimiters projectile-ripgrep powerline paradox nlinum multiple-cursors moe-theme markdown-mode magit macrostep ido-ubiquitous grandshell-theme gotham-theme golden-ratio gitignore-mode flycheck flx-ido dracula-theme distinguished-theme company-web company-statistics company-quickhelp company-lua company-anaconda color-theme-sanityinc-tomorrow clues-theme browse-kill-ring auto-compile all-the-icons-dired)))
+	(fill-column-indicator company-shell dired-single company-clang dumb-jump smart-tabs-mode smarttabs smart-tabs flx lispy ace-window ace-link counsel ivy flycheck-irony ripgrep company bm anaconda-mode lua-mode projectile all-the-icons company-irony irony avy persp-mode-projectile-bridge persp-mode which-key web-mode visual-regexp virtualenvwrapper use-package undo-tree try system-packages switch-window spu smex restart-emacs rainbow-mode rainbow-delimiters projectile-ripgrep powerline paradox nlinum multiple-cursors moe-theme markdown-mode magit macrostep ido-ubiquitous grandshell-theme gotham-theme golden-ratio gitignore-mode flycheck flx-ido dracula-theme distinguished-theme company-web company-statistics company-quickhelp company-lua company-anaconda color-theme-sanityinc-tomorrow clues-theme browse-kill-ring auto-compile all-the-icons-dired)))
  '(persp-keymap-prefix "x")
  '(powerline-gui-use-vcs-glyph t)
  '(ring-bell-function (quote ignore))
@@ -60,7 +60,6 @@
  '(tooltip-delay 0)
  '(tooltip-mode nil)
  '(tooltip-use-echo-area nil)
- '(whitespace-action (quote (auto-cleanup)))
  '(widget-choice-toggle t)
  '(x-gtk-use-system-tooltips t))
 (custom-set-faces
@@ -68,4 +67,5 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(whitespace-line ((t (:inverse-video t)))))
+ '(whitespace-line ((t (:inverse-video t))))
+ '(whitespace-tab ((t (:background "#d7ff5f" :foreground "firebrick")))))

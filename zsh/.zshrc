@@ -2,57 +2,63 @@
 
 {
     local conf_dir="${HOME}/.zshconf"
-    local conf_cache="${conf_dir}/confhash.md5"
+    local cache_path="${conf_dir}/conflist.txt"
+    local rcfile="${HOME}/.zshrc"
 
     local plug_repo="https://github.com/tarjoilija/zgen"
 
     local plug_dir="${HOME}/.zgen"
     local plug_start="${plug_dir}/zgen.zsh"
 
-    local function getplug() {
-        if [[ $(whence git) ]]; then
+    local plugin_list="${conf_dir}/plugins.txt"
+
+    local function get_plug() {
+        if [[ $(whence git &>/dev/null) ]]; then
             git clone ${plug_repo} ${plug_dir}
-            return $?
+            return ${?}
         else
             echo ".zshrc: git not installed" >&2
             exit 1
         fi
     }
 
-    local function loadconf() {
+    local function load_conf() {
         source ${plug_start}
 
-        local conf_files=(${conf_dir}/*.zsh)
+        local current_list=(${conf_dir}/*.zsh(om:gs_%_%%_:gs_@_%@_))
+        current_list="@${(j:@:)current_list}@"
 
-        local cache_hash=$([[ -e ${conf_cache} ]] \
-                               && < ${conf_cache} || < "")
-        
+        (){
+            zgen saved || return 1
 
-        
-        local conf_hash=$([[ ${cache_hash} != "" ]] \
-            && ${$(md5sum < ${conf_files})[1,-2]} \
-                   || ${conf_hash})
+            [[ -e ${cache_path} ]] || return 1
 
-        if ! zgen saved || [[ ! -e ${conf_cache} \
-                                  || ${conf_hash} != ${cache_hash} ]]; then
-        
-            for file in ${conf_files}; do
-                echo "file: ${file}"
+            [[ $(< ${cache_path}) == ${current_list} ]] || return 1
+
+            return 0
+        }
+        local conf_current=${?}
+
+        if [[ ${conf_current} -eq 0 ]]; then
+            zgen apply &>/dev/null
+        else
+            echo "Reloading configuration..."
+            for file in ${conf_dir}/*.zsh; do
                 source ${file}
             done
 
-            zgen save
+            zgen save &>/dev/null
 
-            >! ${conf_cache} <<< ${conf_hash}
+            <<< ${current_list} > ${cache_path}
         fi
     }
 
     mkdir -p ${conf_dir}
 
     if [[ ! -e ${plug_start} ]]; then
-        getplug
-        loadconf
+        get_plug
+        load_conf
     else
-        loadconf
+        load_conf
     fi
 }

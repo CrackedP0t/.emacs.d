@@ -104,8 +104,8 @@
 (use-package projectile
   :demand t
   :init (progn (add-hook 'prog-mode-hook #'(lambda ()
-                                               (when (projectile-project-p)
-                                                 (projectile-mode)))))
+                                             (when (projectile-project-p)
+                                               (projectile-mode)))))
   :bind (("C-c C-f" . projectile-find-file))
   :config (setq projectile-mode-line
                 '(:eval
@@ -329,7 +329,7 @@
             (ivy-mode 1)))
 
 (use-package avy
-  :bind ("C-c g" . avy-goto-char)
+  :bind ("C-." . avy-goto-char)
   :config (setq
            avy-all-windows nil
            avy-all-windows-alt t))
@@ -364,7 +364,8 @@
 
 (use-package smart-tabs-mode
   :config (progn
-            (smart-tabs-insinuate 'c 'c++ 'java 'javascript 'cperl 'python 'ruby 'nxml)))
+            (smart-tabs-insinuate 'c 'c++ 'java 'javascript
+                                  'cperl 'python 'ruby 'nxml)))
 
 (use-package dumb-jump
   :defer t)
@@ -382,7 +383,9 @@
 
 (use-package whitespace
   :defer t
+  :init (add-hook 'before-save-hook 'whitespace-cleanup)
   :init (add-hook 'prog-mode-hook 'whitespace-mode)
   :config (setq
            whitespace-line-column 80
-           whitespace-style '(face lines-tail)))
+           whitespace-style '(face trailing tabs lines-tail
+                                   empty indentation::space)))

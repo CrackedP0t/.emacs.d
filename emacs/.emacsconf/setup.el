@@ -35,7 +35,7 @@
 
 (bind-key* "C-c C-b" 'recompile)
 
-(setq-default indent-tabs-mode t)
+(setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
 
 (setq-default debugger-bury-or-kill 'kill)
