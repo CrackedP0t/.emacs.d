@@ -2,8 +2,8 @@
 
 {
     local conf_dir="${HOME}/.zshconf"
-    local cache_path="${conf_dir}/conflist.txt"
-    local rcfile="${HOME}/.zshrc"
+    local cache_path="${conf_dir}/cache.txt"
+    local rc_file="${HOME}/.zshrc"
 
     local plug_repo="https://github.com/tarjoilija/zgen"
 
@@ -25,15 +25,16 @@
     local function load_conf() {
         source ${plug_start}
 
-        local current_list=(${conf_dir}/*.zsh(om:gs_%_%%_:gs_@_%@_))
-        current_list="@${(j:@:)current_list}@"
+        local last_modified=(${conf_dir}/*.zsh(om[1]))
+        local current_cache="$(zstat +mtime -- \
+                                       ${last_modified})@${last_modified}"
 
         (){
             zgen saved || return 1
 
             [[ -e ${cache_path} ]] || return 1
 
-            [[ $(< ${cache_path}) == ${current_list} ]] || return 1
+            [[ $(< ${cache_path}) = ${~current_cache} ]] || return 1
 
             return 0
         }
@@ -49,7 +50,7 @@
 
             zgen save &>/dev/null
 
-            <<< ${current_list} > ${cache_path}
+            <<< ${current_cache} > ${cache_path}
         fi
     }
 
