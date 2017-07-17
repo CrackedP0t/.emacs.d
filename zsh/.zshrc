@@ -13,10 +13,11 @@
     local plugin_list="${conf_dir}/plugins.txt"
 
     local function get_plug() {
-        if [[ $(whence git &>/dev/null) ]]; then
+        if [[ $(whence git) ]]; then
             git clone ${plug_repo} ${plug_dir}
             return ${?}
         else
+            echo $?
             echo ".zshrc: git not installed" >&2
             exit 1
         fi

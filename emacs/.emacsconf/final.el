@@ -24,14 +24,14 @@
                    (save-excursion (comment-line 1))))
 (unbind-key "C-x C-;")
 
-(bind-key "<mouse-3>" 'mouse-major-mode-menu)
+(bind-key* "<mouse-3>" 'mouse-major-mode-menu)
 (unbind-key "<C-down-mouse-1>")
 
-(bind-key "<down-mouse-2>" 'mouse-yank-at-click)
+(bind-key* "<down-mouse-2>" 'mouse-yank-at-click)
 (unbind-key "<mouse-2>")
 
-(bind-key "C-c f f" 'find-function)
-(bind-key "C-c f v" 'find-variable)
+(bind-key* "C-c f f" 'find-function)
+(bind-key* "C-c f v" 'find-variable)
 
 (bind-key* "C-c C-b" 'recompile)
 
@@ -42,6 +42,8 @@
 
 (when (member "DejaVu Sans Mono" (font-family-list))
   (set-face-attribute 'default nil :font "DejaVu Sans Mono"))
+
+(set-face-attribute 'default nil :
 
 (defun clean-init ()
   "Kills emacs, then clears out ~/.emacs.d"

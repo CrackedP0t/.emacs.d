@@ -88,6 +88,7 @@
 
 (use-package flycheck
   :config (setq flycheck-completing-read-function 'ivy-completing-read
+                flycheck-mode-line nil
                 flycheck-display-errors-delay 0
                 flycheck-idle-change-delay 0
                 flycheck-display-errors-function nil
@@ -389,3 +390,9 @@
            whitespace-line-column 80
            whitespace-style '(face trailing tabs lines-tail
                                    empty indentation::space)))
+
+(use-package dbus
+  :config (progn
+            (defun toggle-yakuake ()
+              ()
+)))
