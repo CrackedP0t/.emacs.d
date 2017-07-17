@@ -63,3 +63,7 @@
         load_conf
     fi
 }
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/home/elaina/.sdkman"
+[[ -s "/home/elaina/.sdkman/bin/sdkman-init.sh" ]] && source "/home/elaina/.sdkman/bin/sdkman-init.sh"

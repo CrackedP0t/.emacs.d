@@ -1,6 +1,6 @@
 (require 'server)
 (if (server-running-p)
-	(kill-emacs)
+    (kill-emacs)
   (server-start))
 
 ;; Make emacs look nice while loading
@@ -16,10 +16,10 @@
 (setq package-enable-at-startup nil)
 
 (defvar setup-path "~/.emacsconf"
-	"The path to the setup files")
-	
+  "The path to the setup files")
+
 (defvar custom-file (concat setup-path "/custom.el")
-	"The custom file")
+  "The custom file")
 
 (add-to-list 'load-path setup-path)
 
@@ -27,17 +27,17 @@
 (load custom-file t)
 
 (setq user-full-name "Elaina Martineau"
-	  user-mail-address "elainamartineau@gmail.com")
+      user-mail-address "elainamartineau@gmail.com")
 
 (setq package-archives '(("org" . "http://orgmode.org/elpa/")
-						 ("melpa-stable" . "http://stable.melpa.org/packages/")
-						 ("melpa" . "http://melpa.org/packages/")
-						 ("gnu" . "http://elpa.gnu.org/packages/")))
+                         ("melpa-stable" . "http://stable.melpa.org/packages/")
+                         ("melpa" . "http://melpa.org/packages/")
+                         ("gnu" . "http://elpa.gnu.org/packages/")))
 
 (setq package-archive-priorities '(("melpa-stable" . 4)
-								   ("melpa" . 3)
-								   ("org" . 2)
-								   ("gnu" . 1)))
+                                   ("melpa" . 3)
+                                   ("org" . 2)
+                                   ("gnu" . 1)))
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)

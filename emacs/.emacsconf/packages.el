@@ -1,10 +1,9 @@
+(require 'use-package)
 (use-package spu
-  :init (defvar spu-log-path "/dev/null")
+  :init (defvar spu-log-path "/dev/null/")
   :config (progn (spu-package-upgrade-daily)))
 
-(use-package rainbow-mode
-  :diminish rainbow-mode
-  :config (progn (rainbow-mode 1)))
+(use-package s)
 
 (use-package dash)
 
@@ -50,15 +49,16 @@
   :init (add-hook 'prog-mode-hook 'hl-line-mode))
 
 (use-package paradox
-  :init (add-hook 'package-menu-mode-hook 'paradox-enable)
   :commands package-list-packages
-  :config (setq paradox-github-token "02321f0cc89a90e4154e6d463632497aeb0767ea"
-                paradox-async-display-buffer-function nil
-                paradox-automatically-star t
-                paradox-column-width-package 32
-                paradox-execute-asynchronously t
-                paradox-homepage-button-string "page"
-                paradox-spinner-type (quote random)))
+  :config (setq
+           paradox-async-display-buffer-function nil
+           paradox-automatically-star t
+           paradox-column-width-package 32
+           paradox-execute-asynchronously t
+           paradox-homepage-button-string "page"
+           paradox-spinner-type (quote random))
+  :config (progn
+            (paradox-enable)))
 
 (use-package restart-emacs
   :defer t)
@@ -66,7 +66,7 @@
 ;; (use-package ido
 ;;   :config (setq ido-create-new-buffer 'always)
 ;;   :config (progn (ido-mode 1)
-;;                               (ido-everywhere 1)))
+;;                  (ido-everywhere 1)))
 
 ;; (use-package ido-ubiquitous
 ;;   :config
@@ -75,31 +75,49 @@
 ;; (use-package smex
 ;;   :config (smex-initialize)
 ;;   :bind (("M-x" . smex)
-;;               ("<menu>" . smex)
-;;               ("M-X" . smex-major-mode-commands)))
+;;          ("<menu>" . smex)
+;;          ("M-X" . smex-major-mode-commands)))
 
 ;; (use-package flx-ido
 ;;   :config (setq ido-enable-flex-matching t
-;;				ido-use-faces nil)
+;;                 ido-use-faces nil)
 ;;   :config (flx-ido-mode t))
 
-;; (use-package switch-window
-;;   :bind ("C-x o" . switch-window))
+(use-package switch-window
+  :bind ("C-x o" . switch-window))
 
 (use-package flycheck
-  :config (setq flycheck-completing-read-function 'ivy-completing-read
-                flycheck-display-errors-delay 0
-                flycheck-idle-change-delay 0
-                flycheck-display-errors-function nil
-                flycheck-display-errors-delay 0
-                flycheck-idle-change-delay 0)
-  :config (progn (global-flycheck-mode 1)))
+  :config (setq
+           flycheck-completing-read-function 'ivy-completing-read
+           flycheck-display-errors-delay 0
+           flycheck-idle-change-delay 0
+           flycheck-display-errors-function nil
+           flycheck-display-errors-delay 0
+           flycheck-idle-change-delay 0)
+  :config (progn
+            (global-flycheck-mode 1)))
 
 (use-package powerline
-  :config (progn (powerline-default-theme)))
+  :config (progn
+            (powerline-default-theme)))
 
 (use-package macrostep
   :defer t)
+
+(use-package lua-mode
+  :mode ("\\.lua$" . lua-mode)
+  :interpreter ("lua" . lua-mode))
+
+(use-package rust-mode
+  :mode ("\\.rs$" . rust-mode)
+  :bind ("C-c <tab>" . rust-format-buffer)
+  :config (setq
+           rust-format-on-save t))
+
+(use-package flycheck-rust
+  :defer t
+  :init (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+
 
 (use-package projectile
   :demand t
@@ -112,10 +130,6 @@
                   (format " %s "
                           (projectile-project-name)))
                 projectile-completion-system 'ivy))
-
-(use-package lua-mode
-  :mode ("\\.lua$" . lua-mode)
-  :interpreter ("lua" . lua-mode))
 
 (use-package org)
 
@@ -142,8 +156,8 @@
               ("M-p" . company-select-previous)
               ("<up>" .  nil)
               ("<down>" . nil)
-              ("RET" . nil)
-              ("<return>" . nil))
+              ;;("<return>" . nil)
+              )
   :bind (:map company-mode-map
               ("<tab>" . company-indent-or-complete-common))
   :init (add-hook 'prog-mode-hook 'company-mode)
@@ -188,13 +202,18 @@
   `(use-package ,backend
      :defer t
      :init
-     (add-backend ',backend ,hook)))
+     (add-backend ,backend ,hook)))
 
 (use-backend company-anaconda 'anaconda-mode-hook)
-(add-backend 'company-elisp 'emacs-lisp-mode-hook)
+(add-backend company-elisp 'emacs-lisp-mode-hook)
 (use-backend company-lua 'lua-mode-hook)
 (use-backend company-web 'web-mode-hook)
 (use-backend company-shell 'sh-mode-hook)
+
+(use-package racer
+  :init (progn
+          (add-hook 'rust-mode-hook #'racer-mode)
+          (add-hook 'racer-mode-hook #'eldoc-mode)))
 
 (use-package irony
   :disabled t
@@ -209,18 +228,21 @@
 
 (use-package golden-ratio
   :diminish golden-ratio-mode
-  :config (setq
-           frame-resize-pixelwise t
+  :config (setq frame-resize-pixelwise t
            golden-ratio-auto-scale t
            golden-ratio-exclude-buffer-names nil
-           golden-ratio-exclude-modes
-           (quote
-            ("message-buffer-mode" "debugger-mode" "help-mode" "custom-mode")))
+           golden-ratio-exclude-modes '("message-buffer-mode"
+                                        "debugger-mode"
+                                        "help-mode"
+                                        "custom-mode"
+                                        "inferior-emacs-lisp-mode"))
 
   :config (golden-ratio-mode))
 
 (use-package web-mode
-  :defer t)
+  :mode ("\\.js[x]?$" "\\.html$" "\\.css")
+  :config (setq
+           web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'"))))
 
 (use-package eldoc
   :diminish eldoc-mode
@@ -272,12 +294,12 @@
   :bind (("C-c r" . vr/replace)
          ("C-c R" . vr/query-replace))
   :config (progn
-            (defun vr/replace-buffer-adv (&rest arguments)
-              (save-excursion
-                (goto-char (point-min))
-                (apply #'vr/replace arguments)))
+            (defun adv-vr/replace-buffer (oldfun &rest arguments))
 
-            (advice-add #'vr/replace :around #'vr/replace-buffer-adv)))
+            (advice-add #'vr/replace :around (lambda ()
+                                               (save-excursion
+                                                 (goto-char (point-min))
+                                                 (apply oldfun arguments))))))
 
 (use-package multiple-cursors
   :defer t
@@ -356,7 +378,6 @@
   :config (progn
             (smex-initialize)))
 
-
 (use-package magit
   :defer t
   :config (setq
@@ -389,3 +410,12 @@
            whitespace-line-column 80
            whitespace-style '(face trailing tabs lines-tail
                                    empty indentation::space)))
+
+(use-package compile
+  :config (progn
+            (defun compile-shell-adv (old-compile command &optional comint)
+              (funcall old-compile command t))
+            (advice-add 'compile :around #'compile-shell-adv)))
+
+(use-package kotlin-mode
+  :mode ("\\.kt$" . kotlin-mode))
