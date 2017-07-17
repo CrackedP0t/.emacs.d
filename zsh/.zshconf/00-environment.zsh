@@ -1,4 +1,7 @@
-#!/usr/bin/zsh
+local function p+() {
+    local path_array=(${PATH} ${@})
+    export PATH=${(j_:_)path_array}
+}
 
 function pb() {
     for dir in ${(Oa)@}; do

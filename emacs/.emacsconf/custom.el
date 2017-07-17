@@ -44,9 +44,13 @@
  '(jdee-db-active-breakpoint-face-colors ("#1B2229" . "#51afef"))
  '(jdee-db-requested-breakpoint-face-colors ("#1B2229" . "#98be65"))
  '(jdee-db-spec-breakpoint-face-colors ("#1B2229" . "#3B3F46"))
- '(package-selected-packages
-   (quote
-    (fill-column-indicator company-shell dired-single company-clang dumb-jump smart-tabs-mode smarttabs smart-tabs flx lispy ace-window ace-link counsel ivy flycheck-irony ripgrep company bm anaconda-mode lua-mode projectile all-the-icons company-irony irony avy persp-mode-projectile-bridge persp-mode which-key web-mode visual-regexp virtualenvwrapper use-package undo-tree try system-packages switch-window spu smex restart-emacs rainbow-mode rainbow-delimiters projectile-ripgrep powerline paradox nlinum multiple-cursors moe-theme markdown-mode magit macrostep ido-ubiquitous grandshell-theme gotham-theme golden-ratio gitignore-mode flycheck flx-ido dracula-theme distinguished-theme company-web company-statistics company-quickhelp company-lua company-anaconda color-theme-sanityinc-tomorrow clues-theme browse-kill-ring auto-compile all-the-icons-dired)))
+ '(mark-even-if-inactive nil)
+ '(org-blank-before-new-entry (quote ((heading) (plain-list-item))))
+ '(org-indent-mode-turns-on-hiding-stars nil)
+ '(org-src-fontify-natively t)
+ '(org-src-tab-acts-natively t)
+ '(org-startup-indented t)
+ '(org-startup-truncated nil)
  '(persp-keymap-prefix "x")
  '(powerline-gui-use-vcs-glyph t)
  '(ring-bell-function (quote ignore))
