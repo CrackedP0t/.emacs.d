@@ -39,7 +39,7 @@
     }
 
     local function setup_prompt() {
-        PROMPT="%(0?..%F{maroon}%? ) %F{blue}%~ %F{gray}❯%f "
+        PROMPT="%(0?..%F{1}%?) %F{blue}%~ %F{gray}❯%f "
     }
 
     mkdir -p ${conf_dir}
