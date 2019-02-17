@@ -1,10 +1,12 @@
-;;; setup.el --- miscellaneous configuration
+;;; final.el --- miscellaneous configuration
 
 ;;; Commentary:
 
 ;;; Code:
 
 (require 'use-package)
+
+(make-directory "~/.emacs.d/autosaves/" t)
 
 (setq vc-handled-backends nil)
 
@@ -21,8 +23,8 @@
 (defun kill-emacs-if-only-frame ()
   "If there is only one frame, kill Emacs."
   (when (eq (length (frame-list)) 1)
-            (print "Only frame; killing" 'external-debugging-output)
-            (save-buffers-kill-emacs t)))
+    (print "Only frame; killing" 'external-debugging-output)
+    (save-buffers-kill-emacs t)))
 
 (add-hook 'delete-frame-functions 'kill-emacs-if-only-frame)
 
@@ -33,55 +35,55 @@
                    (save-excursion (comment-line 1))))
 (unbind-key "C-x C-;")
 
-(bind-key* "<mouse-3>" #'mouse-major-mode-menu)
+(bind-key* "<mouse-3>" 'mouse-major-mode-menu)
 (unbind-key "<C-down-mouse-1>")
 
-(bind-key* "<down-mouse-2>" #'mouse-yank-at-click)
+(bind-key* "<down-mouse-2>" 'mouse-yank-at-click)
 (unbind-key "<mouse-2>")
 
-(bind-key* "C-c f f" #'find-function)
-(bind-key* "C-c f v" #'find-variable)
+(bind-key* "C-c f f" 'find-function)
+(bind-key* "C-c f v" 'find-variable)
 
-(bind-key* "C-c C-b" #'recompile)
+(bind-key* "C-c C-b" 'recompile)
 
-(bind-key* "C-c k" #'kill-this-buffer)
+(bind-key* "C-c k" 'kill-this-buffer)
 
-(bind-key "C-^" #'comint-previous-input comint-mode-map)
+(require 'comint)
+
+(bind-key "C-^" 'comint-previous-input comint-mode-map)
 
 ;; (mapc (lambda (key) (unbind-key key)) '("<up>"
 ;;                                         "<down>"
 ;;                                         "<left>"
 ;;                                         "<right>"))
 
-(setq indent-tabs-mode nil
-      tab-width 4
-      debugger-bury-or-kill 'kill
-      backward-delete-char-untabify-method 'all
-      require-final-newline nil)
+(setq-default indent-tabs-mode nil
+              tab-width 4
+              debugger-bury-or-kill 'kill
+              backward-delete-char-untabify-method 'all
+              require-final-newline t
+              diary-file "~/Documents/diary.txt")
 
 (when (member "DejaVu Sans Mono" (font-family-list))
   (set-face-attribute 'default nil :font "DejaVu Sans Mono"))
 
-(set-face-attribute 'default nil :
-
 (defun clean-init ()
   "Kill Emacs, then clear out ~/.emacs.d."
   (interactive)
-  (add-to-list 'kill-emacs-hook
-               (lambda ()
+  (add-to-list
+   'kill-emacs-hook
+   (lambda ()
 ;;; I just think this git command is really cool
 ;;; cd ~/.emacs.d/ && git status --ignored --porcelain \
 ;;; | sed -nE \"s/\!! (.+)$/\\1/p\" | xargs rm -r &"))
-                 (delete-direcrory user-emacs-directory t))
-                 t)
-               (save-buffers-kill-emacs))
+     (delete-directory
+      user-emacs-directory t))
+   t)
+  (save-buffers-kill-emacs))
 
 (advice-add #'save-buffers-kill-emacs :around
             (lambda (oldfun &optional should-save)
-              (apply oldfun t)))
-
-(add-to-list 'process-environment "DEVKITPRO=/opt/devkitpro/")
-(add-to-list 'process-environment "DEVKITARM=/opt/devkitpro/devkitARM")
+              (funcall oldfun t)))
 
 (defun stop-using-minibuffer ()
   "Kill the minibuffer."
@@ -150,35 +152,67 @@ the rectangle specified by P1 and P2."
 
       (picture-insert-rectangle rect))))
 
-(bind-key* "<C-up>" (lambda ()
-                      (interactive)
-                      (save-excursion
-                        (save-excursion
-                          (end-of-line)
-                          (insert ? ))
-                        (rect-down (point) (1- (end-of-line-pos (point))) -1)
-                        (end-of-line)
-                        (delete-char -1))
-                      (goto-char (+ (column-number)
-                                    (save-excursion
-                                      (forward-line -1)
-                                      (point))))
-                      (whitespace-cleanup)))
+;; (bind-key* "<C-up>" (lambda ()
+;;                       (interactive)
+;;                       (save-excursion
+;;                         (save-excursion
+;;                           (end-of-line)
+;;                           (insert ? ))
+;;                         (rect-down (point) (1- (end-of-line-pos (point))) -1)
+;;                         (end-of-line)
+;;                         (delete-char -1))
+;;                       (goto-char (+ (column-number)
+;;                                     (save-excursion
+;;                                       (forward-line -1)
+;;                                       (point))))
+;;                       (whitespace-cleanup)))
 
-(bind-key* "<C-down>" (lambda ()
-                      (interactive)
-                      (save-excursion
-                        (save-excursion
-                          (end-of-line)
-                          (insert ? ))
-                        (rect-down (point) (1- (end-of-line-pos (point))) 1)
-                        (end-of-line)
-                        (delete-char -1))
-                      (goto-char (+ (column-number)
-                                    (save-excursion
-                                      (forward-line 1)
-                                      (point))))
-                      (whitespace-cleanup)))
+;; (bind-key* "<C-down>" (lambda ()
+;;                         (interactive)
+;;                         (save-excursion
+;;                           (save-excursion
+;;                             (end-of-line)
+;;                             (insert ? ))
+;;                           (rect-down (point) (1- (end-of-line-pos (point))) 1)
+;;                           (end-of-line)
+;;                           (delete-char -1))
+;;                         (goto-char (+ (column-number)
 
-(provide 'setup)
-;;; setup.el ends here
+;;                                       (save-excursion
+;;                                         (forward-line 1)
+;;                                         (point))))
+;;                         (whitespace-cleanup)))
+
+(defun what-face (pos)
+  "Print the face at POS."
+  (interactive "d")
+  (let ((face (or (get-char-property (point) 'read-face-name)
+                  (get-char-property (point) 'face))))
+    (if face (message "Face: %s" face)
+      (message "No face at %d" pos))))
+
+(defun move-buffer (newname)
+  "Move the current buffer's file to NEWNAME \
+and make the buffer point to the new path."
+  (interactive "FMove file to: ")
+  (rename-file (buffer-file-name) newname)
+  (set-visited-file-name newname nil t))
+
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+
+(defun goto-char-forward (character)
+  "Jump to the next CHARACTER provided."
+  (interactive "cCharacter: ")
+  (search-forward (char-to-string character) nil 't 1))
+
+(defun goto-char-backward (character)
+  "Jump to the previous CHARACTER provided."
+  (interactive "cCharacter: ")
+  (search-forward (char-to-string character) nil 't -1))
+
+(bind-key* "C-c g" 'goto-char-forward)
+(bind-key* "C-c v" 'goto-char-backward)
+
+(provide 'final)
+;;; final.el ends here

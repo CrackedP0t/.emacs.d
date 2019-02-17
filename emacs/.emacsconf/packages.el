@@ -1,14 +1,14 @@
-(require 'use-package)
+(require 'use-package) ;; Redundant, but needed for editing with Flycheck
+
 (use-package spu
-  :init (defvar spu-log-path "/dev/null/")
+  :init (defvar spu-log-path "/tmp/spu")
   :config (progn (spu-package-upgrade-daily)))
 
 (use-package s)
 
 (use-package dash)
 
-(use-package all-the-icons
-  :defer t)
+(use-package all-the-icons)
 
 (use-package all-the-icons-dired
   :defer t
@@ -16,33 +16,33 @@
          'dired-mode-hook
          'all-the-icons-dired-mode))
 
-(use-package clues-theme
-  :defer t)
+(defmacro use-defer-multi (&rest packages)
+  "Run use-package with the arguments in \
+each element of PACKAGES and `:defer t`."
+  `(progn ,@(--map (append
+                    (list 'use-package)
+                    it
+                    (list :defer t))
+                   packages)))
 
-(use-package color-theme-sanityinc-tomorrow
-  :defer t)
-
-(use-package distinguished-theme
-  :defer t)
-
-(use-package dracula-theme
-  :defer t)
-
-(use-package gotham-theme
-  :defer t)
-
-(use-package grandshell-theme
-  :defer t)
-
-(use-package moe-theme
-  :config (moe-dark))
+(use-defer-multi (ample-theme)
+                 (clues-theme)
+                 (color-theme-sanityinc-tomorrow)
+                 (distinguished-theme)
+                 (dracula-theme)
+                 (gotham-theme)
+                 (grandshell-theme)
+                 (moe-theme :config (moe-dark))
+                 (cyberpunk-theme))
+(load-theme 'gotham t)
 
 (use-package browse-kill-ring
   :defer t)
 
 (use-package nlinum
   :defer t
-  :init (add-hook 'prog-mode-hook 'nlinum-mode))
+  :init (add-hook 'prog-mode-hook 'nlinum-mode)
+  :init (add-hook 'conf-mode-hook 'nlinum-mode))
 
 (use-package hl-line
   :defer t
@@ -97,15 +97,22 @@
   :config (progn (global-flycheck-mode 1)))
 
 (use-package powerline
+  :disabled t
   :config (progn
             (powerline-default-theme)))
+
+(use-package telephone-line
+  :config (progn
+            (telephone-line-mode 1)))
 
 (use-package macrostep
   :defer t)
 
 (use-package lua-mode
   :mode ("\\.lua$" . lua-mode)
-  :interpreter ("lua" . lua-mode))
+  :interpreter ("lua" . lua-mode)
+  :config (setq
+           lua-indent-level 4))
 
 (use-package rust-mode
   :mode ("\\.rs$" . rust-mode)
@@ -120,9 +127,9 @@
 
 (use-package projectile
   :demand t
-  :init (progn (add-hook 'prog-mode-hook #'(lambda ()
-                                             (when (projectile-project-p)
-                                               (projectile-mode)))))
+  :init (add-hook 'prog-mode-hook #'(lambda ()
+                                      (when (projectile-project-p)
+                                        (projectile-mode))))
   :bind (("C-c C-f" . projectile-find-file))
   :config (setq projectile-mode-line
                 '(:eval
@@ -130,13 +137,31 @@
                           (projectile-project-name)))
                 projectile-completion-system 'ivy))
 
-(use-package org)
+(use-package org
+  :bind (("C-c a" . org-agenda)
+         ("C-c c" . org-capture))
+  :config
+  (setq org-startup-folded 'showeverything
+        org-agenda-files '("~/Documents/Agenda")
+        org-blank-before-new-entry '((heading) (plain-list-item))
+        org-indent-mode-turns-on-hiding-stars nil
+        org-src-fontify-natively t
+        org-src-tab-acts-natively t
+        org-startup-indented t
+        org-startup-truncated nil
+        org-capture-templates '(("r" "Random" entry (file "~/Documents/Agenda/random.org")
+                                 "* TODO %?"))))
 
 (use-package anaconda-mode
+  :disabled t
   :defer t
   :init
   (add-hook 'python-mode-hook 'anaconda-mode)
   (add-hook 'anaconda-mode-hook 'anaconda-eldoc-mode))
+
+(use-package pyenv-mode
+  :disabled t
+  :config (pyenv-mode))
 
 (use-package rainbow-delimiters
   :defer t
@@ -227,7 +252,8 @@
 
 (use-package golden-ratio
   :diminish golden-ratio-mode
-  :config (setq frame-resize-pixelwise t
+  :config (setq
+           frame-resize-pixelwise t
            golden-ratio-auto-scale t
            golden-ratio-exclude-buffer-names nil
            golden-ratio-exclude-modes '("message-buffer-mode"
@@ -239,9 +265,12 @@
   :config (golden-ratio-mode))
 
 (use-package web-mode
-  :mode ("\\.js[x]?$" "\\.html$" "\\.css")
+  :mode ("\\.js[xm]?$" "\\.html$" "\\.css$")
   :config (setq
-           web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'"))))
+           web-mode-content-types-alist '(("jsx" . "\\.js[x]?$")
+                                          ("javascript" . "\\.rules$")
+                                          ("javascript" . "\\.ts[x]?$")
+                                          ("javascript" . "\\.jsm")))
 
 (use-package eldoc
   :diminish eldoc-mode
@@ -295,10 +324,11 @@
   :config (progn
             (defun adv-vr/replace-buffer (oldfun &rest arguments))
 
-            (advice-add #'vr/replace :around (lambda ()
-                                               (save-excursion
-                                                 (goto-char (point-min))
-                                                 (apply oldfun arguments))))))
+            ;; (advice-add #'vr/replace :around (lambda ()
+            ;;                                    (save-excursion
+            ;;                                      (goto-char (point-min))
+            ;;                                      (apply oldfun arguments))))
+            ))
 
 (use-package multiple-cursors
   :defer t
@@ -383,6 +413,7 @@
            magit-completing-read-function 'ivy-completing-read))
 
 (use-package smart-tabs-mode
+  :disabled t
   :config (progn
             (smart-tabs-insinuate 'c 'c++ 'java 'javascript
                                   'cperl 'python 'ruby 'nxml)))
@@ -390,25 +421,29 @@
 (use-package dumb-jump
   :defer t)
 
-(use-package dired-single
-  :defer t
-  :bind (:map dired-mode-map
-              ("<return>" . dired-single-buffer)
-              ("<mouse-1>" . dired-single-buffer-mouse))
-  (bind-key "^"
-            #'(lambda nil
-                (interactive)
-                (dired-single-buffer ".."))
-            dired-mode-map))
+;; (use-package dired-single
+;;   :defer t
+;;   :bind (:map dired-mode-map
+;;               ("<return>" . dired-single-buffer)
+;;               ("<mouse-1>" . dired-single-buffer-mouse))
+;;   (bind-key "^"
+;;             #'(lambda nil
+;;                 (interactive)
+;;                 (dired-single-buffer ".."))
+;;             dired-mode-map))
 
-(use-package whitespace
-  :defer t
-  :init (add-hook 'before-save-hook 'whitespace-cleanup)
-  :init (add-hook 'prog-mode-hook 'whitespace-mode)
-  :config (setq
-           whitespace-line-column 80
-           whitespace-style '(face trailing tabs lines-tail
-                                   empty indentation::space)))
+;; (use-package whitespace
+;;   :defer t
+;;   :init (add-hook 'before-save-hook 'whitespace-cleanup)
+;;   :init (add-hook 'prog-mode-hook 'whitespace-mode)
+;;   :config (setq
+;;            whitespace-line-column 80
+;;            whitespace-style '(face trailing
+;;                                    ;;tabs
+;;                                    lines-tail
+;;                                    empty
+;;                                    ;;indentation::space
+;;                                    )))
 
 (use-package dbus
   :config (progn
@@ -424,3 +459,14 @@
 
 (use-package kotlin-mode
   :mode ("\\.kt$" . kotlin-mode))
+
+(use-package editorconfig
+  :config
+  (editorconfig-mode 1))
+
+(use-package yaml-mode
+  :mode ("\\.yaml$" "\\.yml$"))
+
+(use-package elpy
+  :config
+  (elpy-enable))

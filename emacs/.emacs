@@ -1,27 +1,37 @@
+;;; Package --- Initial loading for emacs configuration
+
+;;; Commentary:
+;;; Pretty neat code if I do say so myself ;)
+
+;;; Code:
+
 (require 'server)
 (if (server-running-p)
     (kill-emacs)
   (server-start))
 
 ;; Make emacs look nice while loading
-(set-frame-font "Hack 12" nil t)
+(advice-add 'load-theme :after (lambda (&rest arguments)
+                                 (set-face-attribute 'default nil
+                                                     :family "Hack"
+                                                     :height 100)) (list :name 'font))
+
 (menu-bar-mode 0)
 (tool-bar-mode 0)
 (scroll-bar-mode 0)
 (load-theme 'misterioso)
-
 (set-frame-parameter nil 'fullscreen 'maximized)
 
 (package-initialize)
 (setq package-enable-at-startup nil)
 
-(defvar setup-path "~/.emacsconf"
-  "The path to the setup files")
+(defvar conf-path "~/.emacsconf/"
+  "The path to the conf files.")
 
-(defvar custom-file (concat setup-path "/custom.el")
-  "The custom file")
+(defvar custom-file (concat conf-path "/custom.el")
+  "The custom file.")
 
-(add-to-list 'load-path setup-path)
+(add-to-list 'load-path conf-path)
 
 (setq custom-file "~/.emacsconf/custom.el")
 (load custom-file t)
@@ -43,12 +53,15 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-(use-package auto-compile
-  :ensure t
-  :config (setq auto-compile-display-buffer nil)
-  :config (progn (auto-compile-on-load-mode)))
-
+(require 'use-package)
 (setq use-package-always-ensure t)
+
+(use-package auto-compile
+  :config (setq
+           auto-compile-display-buffer nil
+           auto-compile-mode-line-counter t)
+  :config (progn
+            (auto-compile-on-load-mode)))
 
 (setq auto-save-file-name-transforms (list (list ".*" (concat
                                                        user-emacs-directory
@@ -63,5 +76,10 @@
       (list "autosaves/" "backups/"))
 
 ;; Load relevant .el files
-(let ((elfiles '("packages" "final")))
-  (mapc 'load elfiles))
+(let ((elfiles (directory-files conf-path
+                                nil
+                                ".*\\.el$")))
+  (mapc #'load elfiles))
+
+(provide '.emacs)
+;;; .emacs ends here

@@ -1,8 +1,3 @@
-local function p+() {
-    local path_array=(${PATH} ${@})
-    export PATH=${(j_:_)path_array}
-}
-
 function pb() {
     for dir in ${(Oa)@}; do
         [[ -d ${dir} ]] && \
@@ -17,12 +12,6 @@ function pe() {
     done
 }
 
-export EDITOR="emacs-or-client"
-export VISUAL="emacs-or-client"
-
-export DEVKITPRO="/opt/devkitpro"
-export DEVKITARM="${DEVKITPRO}/devkitARM"
-
 pb /usr/local/sbin \
    /usr/local/bin \
    /usr/bin \
@@ -33,7 +22,15 @@ pb /usr/local/sbin \
 pb ${HOME}/.cargo/bin \
    ${DEVKITARM}/bin \
    ${HOME}/Development/bin \
-   ${HOME}/.bin
+   ${HOME}/.bin \
+   ${HOME}/.gem/ruby/2.4.0/bin
 
-# source "${HOME}/Development/Repositories/emsdk-portable/emsdk_env.sh" \
-    #        > /dev/null
+export EDITOR="emacsclient"
+export VISUAL="emacsclient"
+
+export DEVKITPRO="/opt/devkitpro"
+export DEVKITARM="${DEVKITPRO}/devkitARM"
+
+export GPG_TTY=$(tty)
+
+export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
