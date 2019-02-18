@@ -23,22 +23,12 @@ lsyncd -nodaemon -direct ${tmp_dir} ${real_path} &
 
 local lsync_id=${!}
 
-function finish_up() {
-    kill ${lsync_id}
+trap "" "INT"
 
-    wait ${lsync_id}
+wait ${lsync_id}
 
-    sudo umount ${src_dir}
-    sudo umount ${src_mnt}
+sudo umount ${src_dir}
+sudo umount ${src_mnt}
 
-    rm -r ${tmp_dir}
-    rm -r ${src_mnt}
-
-    exit 0
-}
-
-trap "finish_up" "INT"
-
-while true; do
-    sleep 1
-done
+rm -r ${tmp_dir}
+rm -r ${src_mnt}
