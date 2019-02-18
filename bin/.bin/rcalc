@@ -1,0 +1,167 @@
+#!/usr/bin/lua
+
+local function mapize(t)
+    setmetatable(t, {
+                     __index = function(self, index)
+                         if rawget(self, tonumber(index)) then
+                             return rawget(self, tonumber(index))
+                         end
+
+                         for k, v in pairs(self) do
+                             if v == index then
+                                 return k
+                             end
+                         end
+                     end
+    })
+
+    return t
+end
+
+
+local function wrap(rgb, name)
+    local fg_template = "\27[38;2;%i;%i;%im%s\27[0m"
+    local bg_template = "\27[48;2;%i;%i;%im%s\27[0m"
+
+    local r, g, b = table.unpack(rgb)
+
+    local fg = (r + g + b) / 3 < 127.5 and 255 or 0
+
+    return bg_template:format(r, g, b, fg_template:format(fg, fg, fg, name))
+end
+
+local band_map = mapize({
+        [-3] = "pink",
+        [-2] = "silver",
+        [-1] = "gold",
+        [0] = "black",
+        "brown",
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "blue",
+        "violet",
+        "gray",
+        "white"
+})
+
+local short_map = mapize({
+        pink = "PK",
+        silver = "SR",
+        gold = "GD",
+        black = "BK",
+        brown = "BN",
+        red = "RD",
+        orange = "OG",
+        yellow = "YE",
+        green = "GN",
+        blue = "BU",
+        violet = "VT",
+        gray = "GY",
+        white = "WH"
+})
+
+local tol_map = mapize({
+        [20] = "none",
+        [10] = "silver",
+        [5] = "gold",
+        [2] = "red",
+        [1] = "brown",
+        [.5] = "green",
+        [.25] = "blue",
+        [.1] = "violet",
+        [.05] = "gray"
+})
+
+local rgbs = {
+    none = {227, 217, 198},
+    pink = {216, 160, 166},
+    silver = {192, 192, 192},
+    gold = {207, 181, 59},
+    black = {14, 14, 16},
+    brown = {126, 75, 38},
+    red = {167, 41, 32},
+    orange = {246, 120, 40},
+    yellow = {246, 182, 0},
+    green = {97, 153, 59},
+    blue = {0, 124, 176},
+    violet = {118, 104, 154},
+    gray = {122, 136, 142},
+    white = {227, 217, 198}
+}
+
+local function band_wrap(num)
+    local name = band_map[num]
+    return wrap(rgbs[name], short_map[name])
+end
+
+local narg = #arg
+
+if narg == 0 then
+    print("Please specify a resistor value or bands")
+    os.exit(1)
+elseif narg == 3 or narg > 6 then
+    print("`" .. narg .. "` is not a valid number of bands")
+    os.exit(1)
+end
+
+if narg < 3 then
+    local value = arg[1]
+
+    local resistance = tonumber((value:lower()
+                                     :gsub("k", "000")
+                                     :gsub("m", "000000")
+                                     :gsub("b", "000000000")))
+    if not resistance or resistance < 0 or value:find("[1-9]%.?[0-9]%.?[1-9]") then
+        print("`" .. value .. "` is not a valid resistance")
+        os.exit(1)
+    end
+
+    local tolerance = tonumber((arg[2] or "20%"):gsub("%%", "") .. "")
+    if not tol_map[tolerance] then
+        print("`" .. arg[2] .. "` is not a valid tolerance")
+    end
+
+    local none = wrap(rgbs.none, " ")
+
+    if resistance == 0 then
+        io.write(band_wrap(0), "\n")
+    else
+        local d1 = value:sub(1, 1)
+
+        local d2
+
+        if tonumber(value) > 9 then
+            d2 = value:sub(2, 2)
+        else
+            d2 = "0"
+        end
+
+        local power = math.floor(math.log(resistance, 10)) - 1
+
+        local tol_color = tol_map[tolerance]
+
+        io.write(none, band_wrap(d1), none, band_wrap(d2),
+                 none, band_wrap(power), none,
+                 wrap(rgbs[tol_color],
+                      tolerance == 20 and "  " or short_map[tol_color]),
+                 none, "\n")
+    end
+else
+    local b1, b2, b3, b4 = table.unpack(arg)
+
+    b1, b2, b3, b4 =
+        #b1 > 2 and b1 or short_map[b1],
+    #b2 > 2 and b2 or short_map[b2],
+    #b3 > 2 and b3 or short_map[b3],
+    #b4 > 2 and b4 or short_map[b4]
+
+    local ohms = math.tointeger(tonumber(band_map[b1] .. band_map[b2])
+                                    * tonumber(10 ^ band_map[b3]))
+
+    local tol = tonumber(tol_map[b4])
+
+    print("Resistance:", ohms .. "Ω")
+    print("Tolerance:", tol .. "%")
+end
