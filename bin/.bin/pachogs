@@ -1,7 +1,15 @@
 #!/bin/bash
 
-rg "%NAME%\n(.*)(?s:.*?)%SIZE%\n(.*)" /var/lib/pacman/local \
-   -g "desc" -U -r $'$1\t$2' -N --no-filename --no-heading \
+pattern="%NAME%\n([^\n]*).*?%SIZE%\n([^\n]*)"
+pcre=""
+
+if [[ "$1" = "-e" ]]; then
+    pattern="%NAME%\n([^\n]*).*?%SIZE%\n([^\n]*)(?!.*?%REASON%\n1)"
+    pcre="-P"
+fi
+
+rg "$pattern" "$pcre" /var/lib/pacman/local \
+   -g "desc" -U -r $'$1\t$2' -N  --multiline-dotall --no-filename --no-heading \
     | sort -n -k 2 \
     | numfmt --to iec-i --field 2 \
     | column -t
