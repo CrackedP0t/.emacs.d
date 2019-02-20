@@ -1,0 +1,7 @@
+#!/bin/bash
+
+rg "%NAME%\n(.*)(?s:.*?)%SIZE%\n(.*)" /var/lib/pacman/local \
+   -g "desc" -U -r $'$1\t$2' -N --no-filename --no-heading \
+    | sort -n -k 2 \
+    | numfmt --to iec-i --field 2 \
+    | column -t

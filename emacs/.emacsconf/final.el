@@ -214,5 +214,6 @@ and make the buffer point to the new path."
 (bind-key* "C-c g" 'goto-char-forward)
 (bind-key* "C-c v" 'goto-char-backward)
 
+
 (provide 'final)
 ;;; final.el ends here

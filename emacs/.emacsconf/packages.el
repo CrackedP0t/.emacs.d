@@ -1,8 +1,8 @@
 (require 'use-package) ;; Redundant, but needed for editing with Flycheck
 
-(use-package spu
-  :init (defvar spu-log-path "/tmp/spu")
-  :config (progn (spu-package-upgrade-daily)))
+;; (use-package spu
+  ;; :init (defvar spu-log-path "/tmp/spu")
+  ;; :config (progn (spu-package-upgrade-daily)))
 
 (use-package s)
 
@@ -165,7 +165,8 @@ each element of PACKAGES and `:defer t`."
 
 (use-package rainbow-delimiters
   :defer t
-  :init (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode))
+  :custom-face (rainbow-delimiters-unmatched-face ((t (:foreground "#091f2e" :background "#c23127"))))
+  :init (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 
 (use-package bm
   :bind (("M-n" . bm-next)
@@ -270,7 +271,7 @@ each element of PACKAGES and `:defer t`."
            web-mode-content-types-alist '(("jsx" . "\\.js[x]?$")
                                           ("javascript" . "\\.rules$")
                                           ("javascript" . "\\.ts[x]?$")
-                                          ("javascript" . "\\.jsm")))
+                                          ("javascript" . "\\.jsm"))))
 
 (use-package eldoc
   :diminish eldoc-mode
