@@ -55,7 +55,7 @@
  '(mark-even-if-inactive nil)
  '(package-selected-packages
    (quote
-    (elpy tldr yaml-mode avy ripgrep company projectile lua-mode toml-mode platformio-mode pyenv-mode editorconfig telephone-line ample-theme cyberpunk-theme comint kotlin-mode racer flycheck-rust rust-mode switch-window which-key web-mode visual-regexp use-package undo-tree try system-packages spu smex smart-tabs-mode restart-emacs rainbow-mode rainbow-delimiters projectile-ripgrep powerline paradox nlinum multiple-cursors moe-theme markdown-mode magit macrostep grandshell-theme gotham-theme golden-ratio gitignore-mode flycheck flx dumb-jump dracula-theme distinguished-theme dired-single counsel company-web company-statistics company-shell company-lua company-anaconda color-theme-sanityinc-tomorrow clues-theme browse-kill-ring bm auto-compile all-the-icons-dired ace-window ace-link)))
+    (visual-regexp-steroids auto-package-update blacken eglot company-lsp lsp-ui lsp-mode glsl-mode doom-modeline nord-theme elpy tldr yaml-mode avy ripgrep company projectile lua-mode toml-mode platformio-mode pyenv-mode editorconfig telephone-line ample-theme cyberpunk-theme comint kotlin-mode racer flycheck-rust rust-mode switch-window which-key web-mode visual-regexp use-package undo-tree try system-packages spu smex smart-tabs-mode restart-emacs rainbow-mode rainbow-delimiters projectile-ripgrep powerline paradox nlinum multiple-cursors moe-theme markdown-mode magit macrostep grandshell-theme gotham-theme golden-ratio gitignore-mode flycheck flx dumb-jump dracula-theme distinguished-theme dired-single counsel company-web company-statistics company-shell company-lua company-anaconda color-theme-sanityinc-tomorrow clues-theme browse-kill-ring bm auto-compile all-the-icons-dired ace-window ace-link)))
  '(paradox-github-token t)
  '(persp-keymap-prefix "x")
  '(powerline-color1 "#222232")
@@ -67,7 +67,7 @@
  '(savehist-mode t)
  '(show-paren-delay 0)
  '(show-paren-mode t)
- '(standard-indent 2)
+ '(standard-indent 4)
  '(tab-stop-list (quote (2 4 6)))
  '(telephone-line-mode t)
  '(tooltip-delay 0)
@@ -95,6 +95,7 @@
      (340 . "#ffcc66")
      (360 . "#99cc99"))))
  '(vc-annotate-very-old-color nil)
+ '(web-mode-enable-auto-quoting nil t)
  '(widget-choice-toggle t)
  '(x-gtk-use-system-tooltips t))
 (custom-set-faces
@@ -102,5 +103,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(rainbow-delimiters-unmatched-face ((t (:foreground "#091f2e" :background "#c23127"))))
  '(whitespace-line ((t (:inverse-video t))))
  '(whitespace-tab ((t (:background "#d7ff5f" :foreground "firebrick")))))

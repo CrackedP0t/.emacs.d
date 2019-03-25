@@ -28,6 +28,7 @@
         if ! zgen saved; then
             zgen load "zsh-users/zsh-completions"
             zgen load "zsh-users/zsh-syntax-highlighting"
+            zgen load "zsh-users/zsh-autosuggestions"
 
             zgen save
         fi
@@ -39,7 +40,8 @@
     }
 
     local function setup_prompt() {
-        PROMPT="%(0?..%F{1}%?) %F{blue}%~ %F{gray}❯%f "
+        PROMPT=$'%(0?..%F{1}%?) %F{blue}%~/ %F{gray}❯%f '
+        # PROMPT=$'\ek%~/ >\e\\%(0?..%F{1}%?) %F{blue}%~/ %F{gray}❯%f '
     }
 
     mkdir -p ${conf_dir}
@@ -51,4 +53,13 @@
     load_conf
 
     setup_prompt
+
+    zstyle ':completion:*' insert-tab false
 }
+
+function preexec() {
+    echo -n "\ek${1}\e\\"
+}
+
+# added by travis gem
+[ -f /home/elaina/.travis/travis.sh ] && source /home/elaina/.travis/travis.sh

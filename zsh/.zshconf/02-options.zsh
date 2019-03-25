@@ -1,8 +1,11 @@
 setopt list_packed
-setopt correct_all
+setopt correct
+setopt rm_star_silent
+setopt hist_ignore_dups
+setopt share_history
 
-bindkey -e
-
+# bindkey -e
+bindkey "^[[3~" delete-char
 
 # no c-s/c-q output freezing
 setopt noflowcontrol

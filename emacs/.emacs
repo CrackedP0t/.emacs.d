@@ -5,6 +5,8 @@
 
 ;;; Code:
 
+(setq inhibit-startup-echo-area-message "elaina")
+
 (require 'server)
 (if (server-running-p)
     (kill-emacs)
@@ -21,6 +23,17 @@
 (scroll-bar-mode 0)
 (load-theme 'misterioso)
 (set-frame-parameter nil 'fullscreen 'maximized)
+
+(setq vc-handled-backends nil)
+
+(save-place-mode 1)
+
+(require 'recentf)
+(recentf-load-list)
+(let ((ifile (car recentf-list)))
+  (message ifile)
+  (when ifile
+    (setq initial-buffer-choice ifile)))
 
 (package-initialize)
 (setq package-enable-at-startup nil)

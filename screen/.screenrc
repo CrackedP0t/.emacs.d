@@ -1,0 +1,5 @@
+escape ^Tt
+defhstatus "Screen #n: t"
+hardstatus off
+term alacritty
+termcapinfo alacritty* ti@:te@

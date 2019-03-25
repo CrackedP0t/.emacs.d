@@ -8,8 +8,6 @@
 
 (make-directory "~/.emacs.d/autosaves/" t)
 
-(setq vc-handled-backends nil)
-
 (fset 'yes-or-no-p 'y-or-n-p)
 
 (add-hook 'before-save-hook 'whitespace-cleanup)
@@ -35,7 +33,6 @@
                    (save-excursion (comment-line 1))))
 (unbind-key "C-x C-;")
 
-(bind-key* "<mouse-3>" 'mouse-major-mode-menu)
 (unbind-key "<C-down-mouse-1>")
 
 (bind-key* "<down-mouse-2>" 'mouse-yank-at-click)
@@ -60,7 +57,7 @@
 (setq-default indent-tabs-mode nil
               tab-width 4
               debugger-bury-or-kill 'kill
-              backward-delete-char-untabify-method 'all
+              backward-delete-char-untabify-method 'hungry
               require-final-newline t
               diary-file "~/Documents/diary.txt")
 
@@ -211,9 +208,12 @@ and make the buffer point to the new path."
   (interactive "cCharacter: ")
   (search-forward (char-to-string character) nil 't -1))
 
+
 (bind-key* "C-c g" 'goto-char-forward)
 (bind-key* "C-c v" 'goto-char-backward)
 
+(add-hook 'emacs-startup-hook (lambda ()
+                                (message "Emacs started successfully!")))
 
 (provide 'final)
 ;;; final.el ends here
