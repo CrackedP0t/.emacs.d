@@ -45,29 +45,6 @@ each element of PACKAGES and `:defer t`."
 (use-package restart-emacs
   :commands restart-emacs)
 
-;; (use-package ido
-;;   :config (setq ido-create-new-buffer 'always)
-;;   :config (progn (ido-mode 1)
-;;                  (ido-everywhere 1)))
-
-;; (use-package ido-ubiquitous
-;;   :config
-;;   (ido-ubiquitous-mode 1))
-
-;; (use-package smex
-;;   :config (smex-initialize)
-;;   :bind (("M-x" . smex)
-;;          ("<menu>" . smex)
-;;          ("M-X" . smex-major-mode-commands)))
-
-;; (use-package flx-ido
-;;   :config (setq ido-enable-flex-matching t
-;;                 ido-use-faces nil)
-;;   :config (flx-ido-mode t))
-
-;; (use-package switch-window
-;;   :bind ("C-x o" . switch-window))
-
 (use-package flycheck
   :config (setq flycheck-completing-read-function 'ivy-completing-read
                 flycheck-mode-line nil
@@ -87,7 +64,7 @@ each element of PACKAGES and `:defer t`."
 ;; (use-package telephone-line
 ;;   :disabled t
 ;;   :config (progn
-;;             (telephone-line-mode 1)))
+;;             (telephone-line-mode)))
 
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode))
@@ -127,13 +104,6 @@ each element of PACKAGES and `:defer t`."
         org-capture-templates '(("r" "Random" entry (file "~/Documents/Agenda/random.org")
                                  "* TODO %?"))))
 
-;; (use-package anaconda-mode
-;;   :disabled t
-;;   :defer t
-;;   :init
-;;   (add-hook 'python-mode-hook 'anaconda-mode)
-;;   (add-hook 'anaconda-mode-hook 'anaconda-eldoc-mode))
-
 (use-package rainbow-delimiters
   :custom-face (rainbow-delimiters-unmatched-face ((t (:foreground "#091f2e" :background "#c23127"))))
   :hook prog-mode-hook rainbow-delimiters-mode)
@@ -172,16 +142,6 @@ each element of PACKAGES and `:defer t`."
            company-continue-commands t
            company-begin-commands '(self-insert-command)))
 
-;; (use-package company-quickhelp
-;;   :disabled t
-;;   :defer t
-;;   :init (add-hook 'company-mode-hook 'company-quickhelp-mode)
-;;   :config (setq
-;;            company-quickhelp-color-background "thistle4"
-;;            company-quickhelp-color-foreground "dark gray"
-;;            company-quickhelp-delay 0
-;;            company-quickhelp-use-propertized-text t))
-
 (use-package company-statistics
   :config (company-statistics-mode))
 
@@ -200,27 +160,11 @@ each element of PACKAGES and `:defer t`."
      :init
      (add-backend ,backend ,hook)))
 
-;; (use-backend company-anaconda 'anaconda-mode-hook)
+
 (add-backend company-elisp 'emacs-lisp-mode-hook)
 (use-backend company-lua 'lua-mode-hook)
 (use-backend company-web 'web-mode-hook)
 (use-backend company-shell 'sh-mode-hook)
-
-;; (use-package racer
-;; :init (progn
-;; (add-hook 'rust-mode-hook #'racer-mode)
-;; (add-hook 'racer-mode-hook #'eldoc-mode)))
-
-;; (use-package irony
-;;   :disabled t
-;;   :init (progn
-;;           (add-hook 'c++-mode-hook 'irony-mode)
-;;           (add-hook 'c-mode-hook 'irony-mode)
-;;           (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
-;;   :config (progn
-;;             (use-backend company-irony 'irony-mode-hook)
-;;             (use-package flycheck-irony
-;;               :init (add-hook 'flycheck-mode-hook 'flycheck-irony-setup))))
 
 (use-package golden-ratio
   :diminish golden-ratio-mode
@@ -253,7 +197,7 @@ each element of PACKAGES and `:defer t`."
 (use-package undo-tree
   :diminish undo-tree-mode
   :config (progn
-            (global-undo-tree-mode 1))
+            (global-undo-tree-mode))
   :config (setq
            undo-tree-visualizer-timestamps t
            undo-tree-visualizer-diff t))
@@ -273,13 +217,10 @@ each element of PACKAGES and `:defer t`."
   :config (setq
            which-key-idle-delay 0.5)
   :config (progn
-            (which-key-mode 1)))
+            (which-key-mode)))
 
 (use-package autorevert
   :diminish auto-revert-mode)
-
-(use-package system-packages
-  :defer t)
 
 (use-package ripgrep)
 
@@ -290,42 +231,7 @@ each element of PACKAGES and `:defer t`."
 
 (use-package visual-regexp-steroids
   :bind (("C-c r" . vr/replace)
-         ("C-c R" . vr/query-replace))
-  :config (progn
-            ;; (advice-add 'vr/replace :around (lambda (oldfun &rest arguments)
-            ;;                                   (save-excursion
-            ;;                                     (goto-char (point-min))
-            ;;                                     (apply oldfun arguments))))
-            ))
-
-;; (use-package multiple-cursors
-;;   :defer t
-;;   :bind (("<C-down-mouse-2>" . mc/add-cursor-on-click)
-;;          ("<C-mouse-2>" . nil)))
-
-;; (use-package persp-mode
-;;   :disabled t
-;;   :config (setq
-;;            persp-interactive-completion-system 'ivy-completing-read)
-;;   :config (progn
-;;             (persp-mode 1)))
-
-;; (use-package persp-mode-projectile-bridge
-;;   :disabled t
-;;   :config (progn
-;;             (add-hook
-;;              'after-init-hook
-;;              'persp-mode-projectile-bridge-mode)
-;;             (add-hook
-;;              'persp-mode-projectile-bridge-mode-hook
-;;              (lambda ()
-;;                (if persp-mode-projectile-bridge-mode
-;;                    (persp-mode-projectile-bridge-find-perspectives-for-all-buffers)
-;;                  (persp-mode-projectile-bridge-kill-perspectives))))))
-
-;; (use-package hydra
-;;   :config (setq
-;;            hydra-verbose t))
+         ("C-c R" . vr/query-replace)))
 
 (use-package flx)
 
@@ -364,59 +270,11 @@ each element of PACKAGES and `:defer t`."
 (use-package ace-window
   :bind (("C-x o" . ace-window)))
 
-;; (use-package flx
-;;   :defer t)
-
-;; (use-package lispy
-;;   :disabled t
-;;   :defer t
-;;   :config (progn
-;;             (add-hook 'emacs-lisp-mode-hook
-;;                       'lispy-mode)))
-
-;; (use-package smex
-;;   :defer t
-;;   :config (progn
-;;             (smex-initialize)))
-
 (use-package magit
   :commands magit-status
   :bind ("C-x g" . magit-status)
   :config (setq
            magit-completing-read-function 'ivy-completing-read))
-
-;; (use-package smart-tabs-mode
-;;   :disabled t
-;;   :config (progn
-;;             (smart-tabs-insinuate 'c 'c++ 'java 'javascript
-;;                                   'cperl 'python 'ruby 'nxml)))
-
-;; (use-package dumb-jump
-;;   :defer t)
-
-;; (use-package dired-single
-;;   :defer t
-;;   :bind (:map dired-mode-map
-;;               ("<return>" . dired-single-buffer)
-;;               ("<mouse-1>" . dired-single-buffer-mouse))
-;;   (bind-key "^"
-;;             #'(lambda nil
-;;                 (interactive)
-;;                 (dired-single-buffer ".."))
-;;             dired-mode-map))
-
-;; (use-package whitespace
-;;   :defer t
-;;   :init (add-hook 'before-save-hook 'whitespace-cleanup)
-;;   :init (add-hook 'prog-mode-hook 'whitespace-mode)
-;;   :config (setq
-;;            whitespace-line-column 80
-;;            whitespace-style '(face trailing
-;;                                    ;;tabs
-;;                                    lines-tail
-;;                                    empty
-;;                                    ;;indentation::space
-;;                                    )))
 
 (use-package compile
   :config (progn
@@ -429,14 +287,23 @@ each element of PACKAGES and `:defer t`."
 
 (use-package editorconfig
   :config
-  (editorconfig-mode 1))
+  (editorconfig-mode))
 
 (use-package yaml-mode
   :mode ("\\.yaml$" "\\.yml$"))
 
-;; (use-package elpy
-;;   :config
-;;   (elpy-enable))
+(use-package pyvenv
+  :init
+  (defun pipenv-venv (&optional directory)
+    "Find the virtualenv for DIRECTORY, or default-directory."
+    (interactive "D")
+    (with-temp-buffer
+      (let ((default-directory (or directory default-directory)))
+        (when (= (call-process "pipenv" nil (list (current-buffer) nil) nil "--venv") 0)
+          (pyvenv-activate (substring (buffer-string) 0 -1))))))
+  :config
+  (pyvenv-mode)
+  :hook (python-mode . (lambda () (pipenv-venv) (lsp))))
 
 (use-package lsp-mode
   :commands lsp
@@ -459,11 +326,12 @@ each element of PACKAGES and `:defer t`."
   )
 
 (use-package blacken
-  :commands blacken-buffer)
+  :commands blacken-buffer
+  :hook (python-mode .  blacken-mode))
 
-;; (use-package flycheck-rust
-;;   :defer t
-;;   :init (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+(use-package py-isort
+  :commands py-isort
+  :hook (before-save . py-isort-before-save))
 
 (use-package glsl-mode)
 
@@ -472,6 +340,3 @@ each element of PACKAGES and `:defer t`."
   (setq auto-package-update-delete-old-versions t)
   (setq auto-package-update-hide-results t)
   (auto-package-update-maybe))
-
-(use-package pyenv-mode
-  :config (pyenv-mode))
